@@ -1,0 +1,196 @@
+.kpi-card {
+    width: 443px;
+    max-width: 100%;
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px 16px 4px;
+    box-sizing: border-box;
+    box-shadow:
+        0 2px 3px rgba(0, 0, 0, 0.01),
+        0 6px 6px rgba(0, 0, 0, 0.01),
+        0 14px 9px rgba(0, 0, 0, 0.01),
+        0 25px 10px rgba(0, 0, 0, 0),
+        0 40px 11px rgba(0, 0, 0, 0);
+    transition: box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.kpi-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.kpi-title {
+    margin: 0;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.kpi-score-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 12px;
+}
+
+.kpi-score {
+    display: flex;
+    align-items: baseline;
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.kpi-value-num {
+    font-size: 36px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.8);
+    font-variant-numeric: tabular-nums;
+}
+
+.kpi-value-den {
+    font-size: 26px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.4);
+}
+
+.kpi-trend {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    color: #007855;
+    white-space: nowrap;
+}
+
+.kpi-trend svg {
+    width: 16px;
+    height: 16px;
+}
+
+.kpi-trend span {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.kpi-chart {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.kpi-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    cursor: pointer;
+}
+
+.kpi-track {
+    position: relative;
+    width: 100%;
+    height: 140px;
+    border-radius: 16px;
+    border: 0.5px solid rgba(0, 0, 0, 0.02);
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMTAuNTE2IiBoZWlnaHQ9IjM2LjQyODMiIHZpZXdCb3g9IjAgMCAxMC41MTYgMzYuNDI4MyI+CjxkZWZzPgo8cGF0dGVybiBpZD0iaGV4IiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIiBwYXR0ZXJuVHJhbnNmb3JtPSJtYXRyaXgoMTAuNTE2IDAgMCAzNi40MjgzIDIuMzgzMTRlLTA1IDApIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIiB2aWV3Qm94PSI1LjU0MjE4ZS0wNSAwIDI0LjQ1NTcgODQuNzE3MSIgd2lkdGg9IjEiIGhlaWdodD0iMSI+Cjx1c2UgeGxpbms6aHJlZj0iI2lubmVyIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtNzMuMzY3MSAtODQuNzE3MSkiLz4KPHVzZSB4bGluazpocmVmPSIjaW5uZXIiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC00OC45MTE0IC04NC43MTcxKSIvPgo8dXNlIHhsaW5rOmhyZWY9IiNpbm5lciIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTI0LjQ1NTcgLTg0LjcxNzEpIi8+Cjx1c2UgeGxpbms6aHJlZj0iI2lubmVyIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwIC04NC43MTcxKSIvPgo8dXNlIHhsaW5rOmhyZWY9IiNpbm5lciIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTYxLjEzOTMgLTQyLjM1ODUpIi8+Cjx1c2UgeGxpbms6aHJlZj0iI2lubmVyIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMzYuNjgzNiAtNDIuMzU4NSkiLz4KPHVzZSB4bGluazpocmVmPSIjaW5uZXIiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMi4yMjc5IC00Mi4zNTg1KSIvPgo8dXNlIHhsaW5rOmhyZWY9IiNpbm5lciIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTIuMjI3OSAtNDIuMzU4NSkiLz4KPHVzZSB4bGluazpocmVmPSIjaW5uZXIiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC03My4zNjcxIDApIi8+Cjx1c2UgeGxpbms6aHJlZj0iI2lubmVyIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtNDguOTExNCAwKSIvPgo8dXNlIHhsaW5rOmhyZWY9IiNpbm5lciIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTI0LjQ1NTcgMCkiLz4KPGcgaWQ9ImlubmVyIj4KPGxpbmUgb3BhY2l0eT0iMC4xNSIgeDE9IjQ5Ljc3NzUiIHkxPSIwLjUiIHgyPSIwLjg2NjAyNSIgeTI9Ijg1LjIxNzEiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIvPgo8L2c+Cjx1c2UgeGxpbms6aHJlZj0iI2lubmVyIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtNjEuMTM5MyA0Mi4zNTg1KSIvPgo8dXNlIHhsaW5rOmhyZWY9IiNpbm5lciIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM2LjY4MzYgNDIuMzU4NSkiLz4KPHVzZSB4bGluazpocmVmPSIjaW5uZXIiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMi4yMjc5IDQyLjM1ODUpIi8+Cjx1c2UgeGxpbms6aHJlZj0iI2lubmVyIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMi4yMjc5IDQyLjM1ODUpIi8+CjwvcGF0dGVybj4KPC9kZWZzPgo8cmVjdCB3aWR0aD0iMTAuNTE2IiBoZWlnaHQ9IjM2LjQyODMiIGZpbGw9InVybCgjaGV4KSIvPgo8L3N2Zz4K");
+    background-repeat: repeat;
+    background-size: 10.516px 36.4283px;
+    overflow: hidden;
+}
+
+.kpi-bar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 16px;
+    background: #e8e8e8;
+    border: 0.5px solid rgba(0, 0, 0, 0.06);
+    transform-origin: bottom;
+    transition:
+        transform 0.3s ease,
+        border-color 0.35s ease;
+    will-change: height, transform;
+}
+
+.kpi-bar.active {
+    border-color: rgba(0, 0, 0, 0.4);
+}
+
+.kpi-col:hover .kpi-bar {
+    transform: scaleY(1.03);
+}
+
+.kpi-bar-grad {
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    background: linear-gradient(180deg, #007854, #03523b);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+
+.kpi-bar.active .kpi-bar-grad {
+    opacity: 1;
+}
+
+.kpi-notch {
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 4px;
+    border-radius: 100px;
+    background: #fff;
+    opacity: 1;
+    transition: opacity 0.35s ease;
+}
+
+.kpi-bar.active .kpi-notch {
+    opacity: 0.2;
+}
+
+.kpi-bar-value {
+    position: absolute;
+    top: 31px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: rgba(0, 0, 0, 0.4);
+    transition:
+        color 0.35s ease,
+        opacity 0.35s ease;
+}
+
+.kpi-bar.active .kpi-bar-value {
+    color: #fff;
+    opacity: 0.9;
+}
+
+.kpi-month {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    color: rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 640px) {
+    .kpi-card {
+        border-radius: 10px;
+    }
+
+    .kpi-score-row {
+        flex-wrap: wrap;
+    }
+}

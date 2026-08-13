@@ -1,0 +1,450 @@
+.revenue-card {
+    width: 100%;
+    max-width: 644px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    box-sizing: border-box;
+    box-shadow:
+        0 2px 3px rgba(0, 0, 0, 0.01),
+        0 6px 6px rgba(0, 0, 0, 0.01),
+        0 14px 9px rgba(0, 0, 0, 0.01),
+        0 25px 10px rgba(0, 0, 0, 0),
+        0 40px 11px rgba(0, 0, 0, 0);
+    transition: box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.title-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.card-period {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: rgba(0, 0, 0, 0.55);
+    white-space: nowrap;
+}
+
+.card-title {
+    margin: 0;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: rgba(0, 0, 0, 0.65);
+}
+
+.revenue-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+}
+
+.revenue-value {
+    display: flex;
+    align-items: baseline;
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.currency {
+    font-size: 27px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.55);
+    margin-right: 2px;
+}
+
+.value-num {
+    font-size: 34px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.8);
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+    transition: filter 0.12s ease-out;
+}
+
+.value-num.rolling {
+    filter: blur(2px);
+}
+
+.trend {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: #007855;
+    white-space: nowrap;
+}
+
+.trend-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.trend svg {
+    width: 16px;
+    height: 16px;
+}
+
+.trend-caption {
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: rgba(0, 0, 0, 0.55);
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.header-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start;
+    gap: 24px;
+}
+
+.seg-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px;
+    background: rgba(0, 0, 0, 0.06);
+    border-radius: 8px;
+    opacity: 0.8;
+}
+
+.seg-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: 1px solid transparent;
+    background: none;
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    color: rgba(0, 0, 0, 0.55);
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.seg-btn.active {
+    color: rgba(0, 0, 0, 0.8);
+}
+
+.seg-thumb {
+    position: absolute;
+    inset: -1px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.seg-icon {
+    position: relative;
+    display: inline-flex;
+    width: 18px;
+    height: 18px;
+}
+
+.seg-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.seg-label {
+    position: relative;
+}
+
+.divider {
+    height: 1px;
+    background: rgba(0, 0, 0, 0.04);
+    margin: 20px 0;
+}
+
+.compare {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.compare-label {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: rgba(0, 0, 0, 0.55);
+    white-space: nowrap;
+}
+
+.compare-scroll-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+}
+
+.compare-pills {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.compare-pills::-webkit-scrollbar {
+    display: none;
+}
+
+.pill {
+    flex-shrink: 0;
+    padding: 6px 12px;
+    border: none;
+    font-family: inherit;
+    border-radius: 100px;
+    background: rgba(0, 0, 0, 0.06);
+    font-size: 14px;
+    letter-spacing: -0.02em;
+    color: rgba(0, 0, 0, 0.6);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.pill:hover {
+    background: rgba(0, 0, 0, 0.08);
+    color: rgba(0, 0, 0, 0.8);
+}
+
+.pill.active {
+    color: rgba(0, 0, 0, 0.85);
+    background: rgba(0, 0, 0, 0.12);
+}
+
+.scroll-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 100px;
+    background: #fff;
+    color: rgba(0, 0, 0, 0.55);
+    cursor: pointer;
+    z-index: 2;
+    opacity: 0;
+    pointer-events: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: opacity 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.scroll-arrow.left {
+    left: 4px;
+}
+
+.scroll-arrow.right {
+    right: 4px;
+}
+
+.compare:hover .scroll-arrow.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.scroll-arrow:hover {
+    background: #fff;
+    border-color: rgba(0, 0, 0, 0.14);
+    color: rgba(0, 0, 0, 0.9);
+}
+
+.scroll-arrow svg {
+    width: 16px;
+    height: 16px;
+}
+
+.chart {
+    position: relative;
+    user-select: none;
+    z-index: 0;
+}
+
+.chart-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+}
+
+.grid-line {
+    stroke: rgba(0, 0, 0, 0.04);
+    stroke-width: 1;
+    stroke-dasharray: 2 2;
+}
+
+.grid-line-v {
+    stroke: rgba(0, 0, 0, 0.03);
+    stroke-width: 1;
+    stroke-dasharray: 2 2;
+}
+
+.axis-label {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    fill: rgba(0, 0, 0, 0.55);
+}
+
+.hit-dot {
+    fill: transparent;
+    cursor: pointer;
+}
+
+.crosshair-line {
+    stroke: #2C836B;
+    stroke-width: 1;
+    stroke-dasharray: 2 5;
+    stroke-linecap: round;
+    opacity: 0.35;
+}
+
+.tooltip {
+    position: absolute;
+    width: 236px;
+    padding: 12px 16px;
+    box-sizing: border-box;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: #000;
+    color: #fff;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35), 0 4px 12px rgba(0, 0, 0, 0.25);
+    pointer-events: none;
+    z-index: 10;
+}
+
+.tooltip-title {
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+}
+
+.tooltip-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.tooltip-key {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    opacity: 0.8;
+}
+
+.tooltip-label {
+    white-space: nowrap;
+}
+
+.tooltip-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 100px;
+    flex-shrink: 0;
+    margin-block: auto;
+}
+
+.tooltip-dot.primary {
+    background: #2c836b;
+}
+
+.tooltip-dot.compare {
+    background: #8a97a6;
+}
+
+.tooltip-row .tooltip-num {
+    font-size: 15px;
+}
+
+.tooltip-row.compare-row {
+    margin-top: 2px;
+}
+
+.tooltip-row.compare-row .tooltip-key,
+.tooltip-row.compare-row .tooltip-num-compare {
+    opacity: 0.55;
+}
+
+.tooltip-row.compare-row .tooltip-num-compare {
+    font-size: 13px;
+}
+
+.tooltip-num {
+    display: inline-block;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    transition: filter 0.12s ease-out;
+}
+
+.tooltip-num.rolling {
+    filter: blur(2px);
+}
+
+@media (max-width: 640px) {
+    .revenue-card {
+        padding: 16px;
+        border-radius: 10px;
+    }
+
+    .card-header {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .header-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .currency {
+        font-size: 23px;
+    }
+
+    .value-num {
+        font-size: 29px;
+    }
+}
