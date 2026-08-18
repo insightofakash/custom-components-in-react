@@ -289,18 +289,23 @@ function playStartup(c, t, params) {
 function playHover(c, t) {
     const start = t;
     const attack = 0.004;
-    const decay = 0.035;
+    const decay = 0.05;
     const osc = c.createOscillator();
     osc.type = "sine";
-    osc.frequency.value = 1500;
+    osc.frequency.value = 620;
+    const filter = c.createBiquadFilter();
+    filter.type = "lowpass";
+    filter.frequency.value = 900;
+    filter.Q.value = 0.6;
     const gain = c.createGain();
     gain.gain.setValueAtTime(0.0001, start);
-    gain.gain.exponentialRampToValueAtTime(0.25, start + attack);
+    gain.gain.exponentialRampToValueAtTime(0.3, start + attack);
     gain.gain.exponentialRampToValueAtTime(0.0001, start + attack + decay);
-    osc.connect(gain);
+    osc.connect(filter);
+    filter.connect(gain);
     gain.connect(master);
     osc.start(start);
-    osc.stop(start + attack + decay + 0.03);
+    osc.stop(start + attack + decay + 0.04);
 }
 
 const sounds = {

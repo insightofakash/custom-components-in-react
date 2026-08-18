@@ -18,6 +18,16 @@
         Arial,
         sans-serif;
     --t-font-mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+    --t-dark-surface: #151515;
+    --t-dark-card-a: #262626;
+    --t-dark-card-b: #3f3f3f;
+
+    --t-accent-blue: #38acff;
+    --t-accent-orange: #ff671a;
+    --t-accent-red: #ff3860;
+    --t-accent-amber: #febc2e;
+    --t-live-green: #00ff09;
 }
 
 .type-display {

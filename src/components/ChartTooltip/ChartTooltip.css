@@ -1,0 +1,110 @@
+.chart-tooltip {
+    position: absolute;
+    padding: 12px;
+    box-sizing: border-box;
+    border-radius: 12px;
+    border: 0.5px solid rgba(0, 0, 0, 0.2);
+    background: #151515;
+    color: #fff;
+    box-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.19),
+        0 9px 10px rgba(0, 0, 0, 0.16),
+        0 20px 14px rgba(0, 0, 0, 0.09),
+        0 36px 16px rgba(0, 0, 0, 0.03),
+        0 57px 18px rgba(0, 0, 0, 0);
+    pointer-events: none;
+    z-index: 10;
+}
+
+.chart-tooltip-title {
+    font-family: var(--t-font-sans);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 26px;
+    letter-spacing: -0.3px;
+    color: #fff;
+    margin-bottom: 16px;
+}
+
+.chart-tooltip-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.chart-tooltip-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    transition: opacity 0.2s ease-out, background-color 0.25s ease-out;
+}
+
+.chart-tooltip-row.muted {
+    opacity: 0.55;
+}
+
+.chart-tooltip-row.highlighted {
+    border-radius: 6px;
+}
+
+.chart-tooltip-row.dimmed {
+    opacity: 0.5;
+}
+
+.chart-tooltip-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.06);
+    margin: 12px 0;
+}
+
+.chart-tooltip-total .chart-tooltip-label {
+    color: #fff;
+    font-weight: 600;
+}
+
+.chart-tooltip-total .chart-tooltip-num {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.chart-tooltip-key {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+}
+
+.chart-tooltip-label {
+    white-space: nowrap;
+    font-family: var(--t-font-sans);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    color: #f7f7f7;
+}
+
+.chart-tooltip-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 5px;
+    flex-shrink: 0;
+    margin-block: auto;
+}
+
+.chart-tooltip-num {
+    display: inline-block;
+    font-family: var(--t-font-sans);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 14px;
+    letter-spacing: -0.04em;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+    transition: filter 0.12s ease-out;
+}
+
+.chart-tooltip-num.rolling {
+    filter: blur(2px);
+}

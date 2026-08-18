@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, animate } from "framer-motion";
 import { HugeiconsIcon } from "@hugeicons/react";
 import sounds from "../../lib/sounds.js";
+import ChartTooltip from "../ChartTooltip/ChartTooltip.jsx";
+import { computeTooltipPosition } from "../ChartTooltip/tooltipPosition.js";
 import {
     ArrowUpRight01Icon as HugeTrendUpIcon,
     ChartColumnIcon as HugeChartColumnIcon,
@@ -214,45 +216,6 @@ function CountUp({ to }) {
 
 const moneyFormat = (v) => `$${Math.round(v).toLocaleString("en-US")}`;
 
-function RollValue({ to, format, className }) {
-    const ref = useRef(null);
-    const prevRef = useRef(null);
-    const [rolling, setRolling] = useState(false);
-    useEffect(() => {
-        const from = prevRef.current == null ? to : prevRef.current;
-        if (from === to) {
-            prevRef.current = to;
-            setRolling(false);
-            if (ref.current) {
-                ref.current.textContent = format(to);
-            }
-            return undefined;
-        }
-        setRolling(true);
-        const controls = animate(from, to, {
-            duration: 0.45,
-            ease: [0.22, 1, 0.36, 1],
-            onUpdate: (v) => {
-                prevRef.current = v;
-                if (ref.current) {
-                    ref.current.textContent = format(Math.round(v));
-                }
-            },
-            onComplete: () => setRolling(false),
-        });
-        prevRef.current = to;
-        return () => controls.stop();
-    }, [to, format]);
-    return (
-        <strong
-            ref={ref}
-            className={`tooltip-num ${rolling ? "rolling" : ""} ${className || ""}`}
-        >
-            {format(to)}
-        </strong>
-    );
-}
-
 function SegToggle({ mode, onChange }) {
     const options = [
         { id: "line", label: "Line", icon: <LineIcon /> },
@@ -285,9 +248,8 @@ function SegToggle({ mode, onChange }) {
     );
 }
 
-const TOOLTIP_W = 236;
-const TOOLTIP_H = 100;
-const CURSOR_GAP = 64;
+const TOOLTIP_W = 278;
+const TOOLTIP_H = 110;
 
 function Chart({ mode, activeCompare }) {
     const ref = useRef(null);
@@ -338,15 +300,16 @@ function Chart({ mode, activeCompare }) {
 
     const w = Math.max(chartW || W, 1);
     const chartH = w * (H / W);
-    const ttLeft =
-        cursorX < w / 2
-            ? Math.min(Math.max(cursorX + CURSOR_GAP, 10), Math.max(10, w - TOOLTIP_W - 10))
-            : Math.max(10, cursorX - CURSOR_GAP - TOOLTIP_W);
-    let ttTop = cursorY - CURSOR_GAP - TOOLTIP_H;
-    if (ttTop < 6) {
-        ttTop = cursorY + CURSOR_GAP;
-    }
-    ttTop = Math.min(ttTop, chartH - TOOLTIP_H - 6);
+    const tooltipPosition = active != null
+        ? computeTooltipPosition({
+              cursorX,
+              cursorY,
+              chartW: w,
+              chartH,
+              tooltipW: TOOLTIP_W,
+              tooltipH: TOOLTIP_H,
+          })
+        : null;
 
     const activeMetric = COMPARE.find((c) => c.id === activeCompare);
     const metricPts = MONTHS.map((d, i) => ({ x: xs[i], y: yFor(d.metrics[activeCompare].plot) }));
@@ -696,48 +659,25 @@ function Chart({ mode, activeCompare }) {
                 </AnimatePresence>
             </svg>
 
-            <AnimatePresence>
-                {active != null && (
-                    <motion.div
-                        key="tooltip"
-                        className="tooltip"
-                        initial={{ opacity: 0, y: 8, scale: 0.96 }}
-                        animate={{ left: ttLeft, top: ttTop, opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 6, scale: 0.97 }}
-                        transition={{
-                            left: { type: "spring", stiffness: 400, damping: 34, mass: 0.6 },
-                            top: { type: "spring", stiffness: 400, damping: 34, mass: 0.6 },
-                            opacity: { duration: 0.18, ease: "easeOut" },
-                            y: { duration: 0.18, ease: "easeOut" },
-                            scale: { duration: 0.18, ease: "easeOut" },
-                        }}
-                    >
-                        <div className="tooltip-title">{MONTHS[active].fullLabel}</div>
-                        <div className="tooltip-row">
-                            <span className="tooltip-key">
-                                <span className="tooltip-dot primary" />
-                                <span className="tooltip-label">Revenue</span>
-                            </span>
-                            <RollValue
-                                to={MONTHS[active].revenueNum}
-                                format={moneyFormat}
-                            />
-                        </div>
-                        <div className="tooltip-row compare-row">
-                            <span className="tooltip-key">
-                                <span className="tooltip-dot compare" />
-                                <span className="tooltip-label">{activeMetric.label}</span>
-                            </span>
-                            <RollValue
-                                key={activeCompare}
-                                className="tooltip-num-compare"
-                                to={MONTHS[active].metrics[activeCompare].val}
-                                format={METRIC_FORMAT[activeCompare]}
-                            />
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            <ChartTooltip
+                position={tooltipPosition}
+                title={active != null ? MONTHS[active].fullLabel : ""}
+                rows={active != null ? [
+                    {
+                        dotColor: "#2C836B",
+                        label: "Revenue",
+                        value: MONTHS[active].revenueNum,
+                        format: moneyFormat,
+                    },
+                    {
+                        dotColor: SECONDARY,
+                        label: activeMetric.label,
+                        value: MONTHS[active].metrics[activeCompare].val,
+                        format: METRIC_FORMAT[activeCompare],
+                        muted: true,
+                    },
+                ] : []}
+            />
         </div>
     );
 }

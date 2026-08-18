@@ -12,8 +12,9 @@ Each component has its own route, listed on the **Components** index page
 - **Revenue Card** — `/revenue-card` — a revenue dashboard card with a Line/Bar
   chart toggle, a "Compare with" metric row, and an interactive hover tooltip
   with rolling values.
-- **KPI Score Card** — `/kpi-score-card` — a KPI score card with count-up value
-  and clickable month bars.
+- **Model Usage** — `/model-usage` — a dark stacked bar chart of cumulative
+  model usage against a daily limit, with a glowing limit badge, live indicator,
+  and an interactive hover tooltip with per-model breakdowns.
 
 More components coming soon — add them in `src/components/registry.jsx` and they
 automatically get their own route and index entry.
