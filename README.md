@@ -59,6 +59,21 @@ npm run dev
 | `npm run preview` | Preview the production build |
 | `npm run lint`  | Lint with Oxlint          |
 
+## Deployment
+
+Live at **https://components.akashdey.com** — GitHub Pages with a custom domain.
+
+- **Auto-deploy** — `.github/workflows/deploy.yml` runs `npm ci` → `npm run build` →
+  `deploy-pages` on every push to `main`.
+- **Custom domain** — `components.akashdey.com`, via a CNAME record in Namecheap
+  (`components` → `insightofakash.github.io.`). `public/CNAME` ships in the build
+  so the domain survives Actions-based deploys.
+- **Routing** — HashRouter, so routes are `…/#/revenue-card` and `…/#/model-usage`
+  (no server rewrite needed on Pages).
+- **Assets** — `public/` also ships the social preview image (`og:image`, 1200×630),
+  the black/white scheme-aware favicons, and `CNAME`. `base` is `'/'` since the
+  subdomain serves the site at its root.
+
 ## Tech stack
 
 - React 19

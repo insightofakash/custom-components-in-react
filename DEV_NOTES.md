@@ -71,6 +71,61 @@ it kills their server.
 
 ---
 
+## Deployment & GitHub Pages
+
+Production site: **https://components.akashdey.com** (custom domain on GitHub Pages).
+
+### How it's wired
+
+- `.github/workflows/deploy.yml` — on push to `main` (or `workflow_dispatch`):
+  `npm ci` → `npm run build` → `actions/configure-pages@v5` →
+  `upload-pages-artifact` (uploads `dist/`) → `deploy-pages@v4`.
+  Permissions: `pages: write`, `id-token: write`.
+- `vite.config.js` has `base: '/'` — the subdomain serves at the root, so no
+  `/repo/` prefix on asset URLs.
+- `public/CNAME` = `components.akashdey.com` — **must ship in `dist/`** for
+  Actions-based deploys, otherwise GitHub drops the custom domain on the next
+  deploy.
+- DNS (Namecheap): CNAME `components` → `insightofakash.github.io.`
+- Routing stays HashRouter — deep-links like
+  `components.akashdey.com/#/revenue-card` work with zero server config.
+
+### Gotchas (learned the hard way)
+
+- `actions/configure-pages` fails with **"Get Pages site failed: Not Found"**
+  when Pages was never enabled on the repo. Fix from the CLI (no UI needed):
+
+  ```
+  gh api --method POST repos/<owner>/<repo>/pages -f build_type=workflow
+  ```
+
+- Set the custom domain via the API too:
+
+  ```
+  gh api --method PUT repos/<owner>/<repo>/pages -f cname=components.akashdey.com
+  ```
+
+  HTTPS cert provisioning is async — wait, then re-check with
+  `gh api repos/<owner>/<repo>/pages` (look at `https_certificate.state`).
+- Re-run a failed deploy with `gh run rerun <run-id>`; poll with
+  `gh run watch <run-id> --exit-status`.
+- Action versions currently print a Node 20 deprecation warning — harmless.
+- Verify a deploy: `curl -sI https://components.akashdey.com/` (expect HTTP 200),
+  then `curl -s https://components.akashdey.com/social-image.png`.
+
+### Social image & favicons (scoped to components.akashdey.com)
+
+- `public/social-image.png` (1200×630) + OG/Twitter meta tags in `index.html`
+  (`og:image`, `og:url`, `twitter:card = summary_large_image`, all absolute URLs
+  on the custom domain). Social platforms cache old previews — use the LinkedIn /
+  Twitter / Facebook debuggers to refresh after changing it.
+- Favicons: `public/favicon-black.png` (light scheme) and
+  `public/favicon-white.png` (dark scheme), switched via
+  `media="(prefers-color-scheme: …)"` link tags. Replaced the old purple
+  `favicon.svg`.
+
+---
+
 ## Project structure
 
 ```
