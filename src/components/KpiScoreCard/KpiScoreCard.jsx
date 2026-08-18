@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, animate } from "framer-motion";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ArrowUpRight01Icon as HugeTrendUpIcon } from "@hugeicons/core-free-icons";
+import sounds from "../../lib/sounds.js";
 import "./KpiScoreCard.css";
 
 const MONTHS = [
@@ -91,7 +92,10 @@ function KpiScoreCard() {
                             className="kpi-col"
                             onMouseEnter={() => setHovered(i)}
                             onMouseLeave={() => setHovered(null)}
-                            onClick={() => setSelected(i)}
+                            onClick={() => {
+                                sounds.tick();
+                                setSelected(i);
+                            }}
                         >
                             <div className="kpi-track">
                                 <motion.div

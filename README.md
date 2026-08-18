@@ -1,13 +1,46 @@
 # Custom Components in React
 
-A showcase of reusable, hand-crafted UI components built with React, Vite, and Framer Motion.
+A showcase of reusable, hand-crafted UI components built with React, Vite, and
+Framer Motion — each component living on its own page behind a subtle navigation
+chrome.
 
 ## Included components
 
-- **RevenueCard** — a card for surfacing revenue figures and trends.
-- **KpiScoreCard** — a KPI scoring card with an interactive score display.
+Each component has its own route, listed on the **Components** index page
+(`/`):
 
-More components coming soon.
+- **Revenue Card** — `/revenue-card` — a revenue dashboard card with a Line/Bar
+  chart toggle, a "Compare with" metric row, and an interactive hover tooltip
+  with rolling values.
+- **KPI Score Card** — `/kpi-score-card` — a KPI score card with count-up value
+  and clickable month bars.
+
+More components coming soon — add them in `src/components/registry.jsx` and they
+automatically get their own route and index entry.
+
+## Showcase chrome
+
+Component pages float a subtle top chrome (`ShowcaseChrome`):
+
+- **Back** (top-left) — returns to the index.
+- **Refresh** (top-right) — replays the component's entrance animations.
+- **Hide** (top-right) — fades all three controls away; the same action brings
+  them back.
+
+Keyboard shortcuts:
+
+| Shortcut      | Action               |
+| ------------- | -------------------- |
+| `⌘/` / `Ctrl+/` | Replay animations  |
+| `⌘U` / `Ctrl+U` | Toggle the chrome  |
+
+## Generative UI sounds
+
+Interface sounds are synthesized at runtime with the Web Audio API — no audio
+files. The library in `src/lib/sounds.js` is a port of Raphael Salaja's
+perfected [Sound Lab](https://www.userinterface.wiki/generating-sounds-with-ai)
+(9 sounds × 9 "feel" presets, default `aero`), triggered on discrete
+interactions (clicks, selects, toggles).
 
 ## Getting started
 
@@ -29,5 +62,7 @@ npm run dev
 
 - React 19
 - Vite 8
+- React Router (HashRouter)
 - Framer Motion
 - Huge Icons
+- Web Audio API (generated UI sounds)

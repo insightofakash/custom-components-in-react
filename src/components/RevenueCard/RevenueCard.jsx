@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, animate } from "framer-motion";
 import { HugeiconsIcon } from "@hugeicons/react";
+import sounds from "../../lib/sounds.js";
 import {
     ArrowUpRight01Icon as HugeTrendUpIcon,
     ChartColumnIcon as HugeChartColumnIcon,
@@ -264,7 +265,10 @@ function SegToggle({ mode, onChange }) {
                     key={opt.id}
                     type="button"
                     className={`seg-btn ${mode === opt.id ? "active" : ""}`}
-                    onClick={() => onChange(opt.id)}
+                    onClick={() => {
+                        sounds.toggle();
+                        onChange(opt.id);
+                    }}
                 >
                     {mode === opt.id && (
                         <motion.span
@@ -845,6 +849,7 @@ function RevenueCard() {
                                 type="button"
                                 className={`pill ${p.id === activeCompare ? "active" : ""}`}
                                 onClick={(e) => {
+                                    sounds.tick();
                                     setActiveCompare(p.id);
                                     e.currentTarget.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
                                 }}

@@ -1,17 +1,22 @@
+import { Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
-import RevenueCard from "./components/RevenueCard/RevenueCard.jsx";
-import KpiScoreCard from "./components/KpiScoreCard/KpiScoreCard.jsx";
+import ComponentIndex from "./components/ComponentIndex/ComponentIndex.jsx";
+import ComponentPage from "./components/ComponentPage/ComponentPage.jsx";
+import { COMPONENTS } from "./components/registry.jsx";
 
 function App() {
     return (
-        <div className="component-shell">
-            <section className="component-stage">
-                <RevenueCard />
-            </section>
-            <section className="component-stage">
-                <KpiScoreCard />
-            </section>
-        </div>
+        <Routes>
+            <Route path="/" element={<ComponentIndex />} />
+            {COMPONENTS.map((c) => (
+                <Route
+                    key={c.id}
+                    path={c.path}
+                    element={<ComponentPage component={c} />}
+                />
+            ))}
+            <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
     );
 }
 

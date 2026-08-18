@@ -1,0 +1,129 @@
+.chrome {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    box-sizing: border-box;
+    opacity: 0.5;
+    pointer-events: none;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.chrome:hover {
+    opacity: 1;
+}
+
+.chrome-hidden,
+.chrome-hidden:hover {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.chrome-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border: none;
+    background: none;
+    border-radius: 8px;
+    color: var(--t-muted);
+    cursor: pointer;
+    pointer-events: auto;
+    font-family: inherit;
+    transition: color 0.2s ease, background 0.2s ease;
+}
+
+.chrome-btn:hover {
+    color: var(--t-strong);
+    background: var(--t-surface);
+}
+
+.chrome-btn-icon {
+    display: inline-flex;
+}
+
+.chrome-btn-icon svg {
+    width: 16px;
+    height: 16px;
+}
+
+.chrome-btn-label {
+    color: inherit;
+}
+
+.chrome-actions {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    pointer-events: auto;
+}
+
+.chrome-refresh {
+    padding: 4px 6px;
+}
+
+.chrome-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border: none;
+    background: none;
+    border-radius: 8px;
+    color: var(--t-muted);
+    cursor: pointer;
+    pointer-events: auto;
+    font-family: inherit;
+    transition: color 0.2s ease, background 0.2s ease;
+}
+
+.chrome-hint:hover {
+    color: var(--t-strong);
+    background: var(--t-surface);
+}
+
+.chrome-kbd {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 26px;
+    height: 20px;
+    padding: 0 5px;
+    box-sizing: border-box;
+    border: 1px solid var(--t-border);
+    border-radius: 5px;
+    background: var(--t-surface);
+    font-family: var(--t-font-mono);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0;
+    color: var(--t-muted);
+    white-space: nowrap;
+}
+
+.chrome-kbd-sym {
+    font-size: 16px;
+    line-height: 1;
+}
+
+@media (max-width: 640px) {
+    .chrome {
+        padding: 12px 14px;
+    }
+
+    .chrome-back .chrome-btn-label {
+        display: none;
+    }
+
+    .chrome .chrome-kbd {
+        display: none;
+    }
+}

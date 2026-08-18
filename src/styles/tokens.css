@@ -1,0 +1,101 @@
+:root {
+    --t-bg: #ffffff;
+    --t-surface: #f7f7f7;
+    --t-border: #ebebeb;
+    --t-subtle: #a6a6a6;
+    --t-muted: #7f7f7f;
+    --t-body: #5d5d5d;
+    --t-strong: #292929;
+
+    --t-font-sans:
+        -apple-system,
+        BlinkMacSystemFont,
+        "SF Pro Text",
+        "SF Pro Display",
+        "Helvetica Neue",
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+    --t-font-mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+.type-display {
+    font-family: var(--t-font-sans);
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 40px;
+    letter-spacing: -0.4px;
+}
+
+.type-title-1 {
+    font-family: var(--t-font-sans);
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: -0.25px;
+}
+
+.type-title-2 {
+    font-family: var(--t-font-sans);
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 28px;
+    letter-spacing: -0.2px;
+}
+
+.type-title-3 {
+    font-family: var(--t-font-sans);
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 26px;
+    letter-spacing: -0.15px;
+}
+
+.type-body-large {
+    font-family: var(--t-font-sans);
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 26px;
+    letter-spacing: -0.3px;
+}
+
+.type-body {
+    font-family: var(--t-font-sans);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 22px;
+    letter-spacing: -0.15px;
+}
+
+.type-body-small {
+    font-family: var(--t-font-sans);
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 20px;
+    letter-spacing: -0.05px;
+}
+
+.type-caption {
+    font-family: var(--t-font-sans);
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 18px;
+    letter-spacing: 0;
+}
+
+.type-label {
+    font-family: var(--t-font-sans);
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0;
+}
+
+.type-commands {
+    font-family: var(--t-font-mono);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    letter-spacing: 0;
+}
