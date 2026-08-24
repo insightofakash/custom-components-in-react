@@ -286,7 +286,7 @@ function playStartup(c, t, params) {
     });
 }
 
-function playHover(c, t) {
+function playHover(c, t, vol = 1) {
     const start = t;
     const attack = 0.004;
     const decay = 0.05;
@@ -299,13 +299,70 @@ function playHover(c, t) {
     filter.Q.value = 0.6;
     const gain = c.createGain();
     gain.gain.setValueAtTime(0.0001, start);
-    gain.gain.exponentialRampToValueAtTime(0.3, start + attack);
+    gain.gain.exponentialRampToValueAtTime(0.3 * vol, start + attack);
     gain.gain.exponentialRampToValueAtTime(0.0001, start + attack + decay);
     osc.connect(filter);
     filter.connect(gain);
     gain.connect(master);
     osc.start(start);
     osc.stop(start + attack + decay + 0.04);
+}
+
+function playHoverSub(c, t, vol = 1) {
+    const start = t;
+    const attack = 0.005;
+    const decay = 0.07;
+    const osc = c.createOscillator();
+    osc.type = "sine";
+    osc.frequency.value = 480;
+    const filter = c.createBiquadFilter();
+    filter.type = "lowpass";
+    filter.frequency.value = 650;
+    filter.Q.value = 1.2;
+    const gain = c.createGain();
+    gain.gain.setValueAtTime(0.0001, start);
+    gain.gain.exponentialRampToValueAtTime(0.24 * vol, start + attack);
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + attack + decay);
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(master);
+    osc.start(start);
+    osc.stop(start + attack + decay + 0.04);
+}
+
+function playWhoosh(c, t, params) {
+    const duration = 0.3 * params.decayMult;
+    const buffer = c.createBuffer(1, c.sampleRate * duration, c.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < data.length; i++) {
+        const fadeIn = Math.min(1, i / (c.sampleRate * 0.035));
+        data[i] =
+            (Math.random() * 2 - 1) *
+            fadeIn *
+            Math.exp(-i / (c.sampleRate * 0.12));
+    }
+    const noise = c.createBufferSource();
+    noise.buffer = buffer;
+
+    const filter = c.createBiquadFilter();
+    filter.type = "bandpass";
+    filter.frequency.setValueAtTime(280, t);
+    filter.frequency.exponentialRampToValueAtTime(
+        1700,
+        t + duration * 0.9,
+    );
+    filter.Q.value = 1.2;
+
+    const gain = c.createGain();
+    gain.gain.setValueAtTime(0.0001, t);
+    gain.gain.exponentialRampToValueAtTime(0.5, t + 0.03);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + duration);
+
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(master);
+    noise.start(t);
+    noise.stop(t + duration + 0.05);
 }
 
 const sounds = {
@@ -318,11 +375,17 @@ const sounds = {
     error: () => play(playError),
     warning: () => play(playWarning),
     startup: () => play(playStartup),
-    hover: () => {
+    hover: (vol = 1) => {
         const c = ensureCtx();
         if (!c) return;
-        playHover(c, c.currentTime);
+        playHover(c, c.currentTime, vol);
     },
+    hoverSub: (vol = 1) => {
+        const c = ensureCtx();
+        if (!c) return;
+        playHoverSub(c, c.currentTime, vol);
+    },
+    whoosh: () => play(playWhoosh),
     setFeel: (feel) => {
         currentFeel = feel;
     },
@@ -332,6 +395,7 @@ const sounds = {
             master.gain.value = v;
         }
     },
+    getVolume: () => volume,
 };
 
 export default sounds;
