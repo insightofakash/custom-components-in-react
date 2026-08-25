@@ -15,6 +15,10 @@ Each component has its own route, listed on the **Components** index page
 - **Model Usage** — `/model-usage` — a dark stacked bar chart of cumulative
   model usage against a daily limit, with a glowing limit badge, live indicator,
   and an interactive hover tooltip with per-model breakdowns.
+- **Token Usage** — `/token-usage` — a segmented meter of per-model token usage
+  against a 1M limit: rows glow on hover, lock in on select with a brightening
+  ramp toward the cursor, and a broom action "compresses" the selected row
+  (rolling `980.02K → 560.58K` transition, spinner pill, check to reset).
 
 More components coming soon — add them in `src/components/registry.jsx` and they
 automatically get their own route and index entry.
@@ -68,7 +72,8 @@ Live at **https://components.akashdey.com** — GitHub Pages with a custom domai
 - **Custom domain** — `components.akashdey.com`, via a CNAME record in Namecheap
   (`components` → `insightofakash.github.io.`). `public/CNAME` ships in the build
   so the domain survives Actions-based deploys.
-- **Routing** — HashRouter, so routes are `…/#/revenue-card` and `…/#/model-usage`
+- **Routing** — HashRouter, so routes are `…/#/revenue-card`, `…/#/model-usage`,
+  `…/#/pill-nav`, and `…/#/token-usage`
   (no server rewrite needed on Pages).
 - **Assets** — `public/` also ships the social preview image (`og:image`, 1200×630),
   the black/white scheme-aware favicons, and `CNAME`. `base` is `'/'` since the

@@ -31,6 +31,16 @@ function ensureCtx() {
     return ctx;
 }
 
+if (typeof window !== "undefined") {
+    const unlock = () => {
+        ensureCtx();
+        window.removeEventListener("pointerdown", unlock);
+        window.removeEventListener("keydown", unlock);
+    };
+    window.addEventListener("pointerdown", unlock);
+    window.addEventListener("keydown", unlock);
+}
+
 function play(fn) {
     const c = ensureCtx();
     if (!c) return;
@@ -330,6 +340,55 @@ function playHoverSub(c, t, vol = 1) {
     osc.stop(start + attack + decay + 0.04);
 }
 
+function playHoverDeep(c, t, vol = 1) {
+    const start = t;
+    const attack = 0.007;
+    const decay = 0.08;
+    const osc = c.createOscillator();
+    osc.type = "sine";
+    osc.frequency.value = 340;
+    const filter = c.createBiquadFilter();
+    filter.type = "lowpass";
+    filter.frequency.value = 480;
+    filter.Q.value = 0.7;
+    const gain = c.createGain();
+    gain.gain.setValueAtTime(0.0001, start);
+    gain.gain.exponentialRampToValueAtTime(0.26 * vol, start + attack);
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + attack + decay);
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(master);
+    osc.start(start);
+    osc.stop(start + attack + decay + 0.04);
+}
+
+function playRatchet(c, t, params) {
+    const ticks = 20;
+    let time = t + 0.18;
+    for (let i = 0; i < ticks; i++) {
+        const progress = i / ticks;
+        const duration = 0.016 * params.decayMult;
+        const buffer = c.createBuffer(1, Math.max(1, Math.floor(c.sampleRate * duration)), c.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let k = 0; k < data.length; k++) {
+            data[k] = (Math.random() * 2 - 1) * Math.exp(-k / (30 * params.decayMult));
+        }
+        const noise = c.createBufferSource();
+        noise.buffer = buffer;
+        const filter = c.createBiquadFilter();
+        filter.type = "bandpass";
+        filter.frequency.value = 1000 - 620 * progress;
+        filter.Q.value = 8;
+        const gain = c.createGain();
+        gain.gain.value = 0.3 * (1 - 0.3 * progress) * params.gainMult;
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(master);
+        noise.start(time);
+        time += 0.026 + 0.078 * progress;
+    }
+}
+
 function playWhoosh(c, t, params) {
     const duration = 0.3 * params.decayMult;
     const buffer = c.createBuffer(1, c.sampleRate * duration, c.sampleRate);
@@ -385,6 +444,12 @@ const sounds = {
         if (!c) return;
         playHoverSub(c, c.currentTime, vol);
     },
+    hoverDeep: (vol = 1) => {
+        const c = ensureCtx();
+        if (!c) return;
+        playHoverDeep(c, c.currentTime, vol);
+    },
+    ratchet: () => play(playRatchet),
     whoosh: () => play(playWhoosh),
     setFeel: (feel) => {
         currentFeel = feel;

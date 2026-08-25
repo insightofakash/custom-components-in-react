@@ -1,0 +1,403 @@
+.tu-card {
+    position: relative;
+    width: 100%;
+    max-width: 673px;
+    box-sizing: border-box;
+    padding: 24px 32px;
+    border-radius: 24px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: linear-gradient(180deg, #1b1b1b 0%, #000000 100%);
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.tu-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.tu-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    font-family: var(--t-font-sans);
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 26px;
+    letter-spacing: -0.15px;
+    color: #fff;
+}
+
+.tu-live {
+    position: relative;
+    width: 6px;
+    height: 6px;
+    flex-shrink: 0;
+}
+
+.tu-live-dot {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--t-live-green);
+}
+
+.tu-live-ring {
+    position: absolute;
+    left: -3px;
+    top: -3px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--t-live-green);
+    opacity: 0.2;
+    animation: tu-pulse 2s ease-in-out infinite;
+}
+
+@keyframes tu-pulse {
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.2;
+    }
+    50% {
+        transform: scale(1.6);
+        opacity: 0.05;
+    }
+}
+
+.tu-subtitle {
+    margin: 4px 0 0;
+    font-family: var(--t-font-sans);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 22px;
+    letter-spacing: -0.15px;
+    color: var(--t-subtle);
+}
+
+.tu-date {
+    color: var(--t-body);
+}
+
+.tu-chart {
+    position: relative;
+}
+
+.tu-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.tu-rows--locked {
+    pointer-events: none;
+}
+
+.tu-row {
+    display: flex;
+    gap: 5px;
+    height: 38.33px;
+    cursor: pointer;
+    transition: opacity 0.25s ease-out;
+}
+
+.tu-row.dimmed {
+    opacity: 0.5;
+}
+
+.tu-pill {
+    position: relative;
+    flex: 1 1 0;
+    max-width: 8px;
+    height: 100%;
+    border-radius: 999px;
+    background: var(--t-strong);
+    transition: background-color 0.35s ease, box-shadow 0.25s ease-out;
+}
+
+.tu-row.active .tu-pill.filled {
+    box-shadow: 0 0 6px 0 var(--glow-color);
+}
+
+.tu-pill-ramp {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--glow-color);
+    mix-blend-mode: plus-lighter;
+    pointer-events: none;
+}
+
+.tu-axis {
+    position: relative;
+    height: 16px;
+    margin-top: 12px;
+}
+
+.tu-axis-label {
+    position: absolute;
+    top: 0;
+    text-transform: uppercase;
+    color: var(--t-subtle);
+}
+
+.tu-axis-tokens {
+    left: 0;
+    color: var(--t-muted);
+}
+
+.tu-axis-tick {
+    transform: translateX(-50%);
+}
+
+.tu-axis-end {
+    right: 0;
+}
+
+.tu-cursor {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 0;
+    border-left: 1.6px dashed rgba(255, 255, 255, 0.9);
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* 0-width flex anchor: the pill centers on this point no matter how wide it
+   morphs, so its position never depends on its own measured width. */
+.tu-tooltip-anchor {
+    position: absolute;
+    top: calc(100% + 12px);
+    z-index: 5;
+    width: 0;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.tu-tooltip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    height: 40px;
+    padding: 0 16px;
+    box-sizing: border-box;
+    border-radius: 12px;
+    background: #fff;
+    border: 0.5px solid rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.tu-tooltip-model {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--t-font-sans);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    color: #1a1a1a;
+}
+
+.tu-tooltip-swatch {
+    width: 16px;
+    height: 16px;
+    border-radius: 5px;
+    flex-shrink: 0;
+}
+
+.tu-tooltip-value {
+    display: inline-block;
+    color: #1a1a1a;
+    transition: filter 0.15s ease-out;
+}
+
+.tu-tooltip-value.rolling {
+    filter: blur(1.5px);
+}
+
+.tu-tooltip-swatch--error {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--t-accent-red);
+}
+
+.tu-tooltip-model-error {
+    font-family: var(--t-font-sans);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    color: var(--t-accent-red);
+}
+
+.tu-digits {
+    display: inline-flex;
+}
+
+.tu-digit {
+    display: inline-block;
+    animation: tu-digit-pop-in 500ms cubic-bezier(0.34, 1.45, 0.64, 1) both;
+    will-change: transform, opacity, filter;
+}
+
+.tu-digit[data-stagger="1"] {
+    animation-delay: 70ms;
+}
+
+.tu-digit[data-stagger="2"] {
+    animation-delay: 140ms;
+}
+
+@keyframes tu-digit-pop-in {
+    0% {
+        transform: translateY(8px);
+        opacity: 0;
+        filter: blur(2px);
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+        filter: blur(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tu-digit {
+        animation: none !important;
+    }
+}
+
+.tu-divider {
+    height: 1px;
+    background: rgba(127, 127, 127, 0.2);
+}
+
+.tu-footer-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 40px;
+    margin-top: 24px;
+}
+
+.tu-legend {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 36px;
+}
+
+.tu-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: opacity 0.25s ease-out;
+}
+
+.tu-legend-item.dimmed {
+    opacity: 0.5;
+}
+
+.tu-legend-swatch {
+    width: 16px;
+    height: 16px;
+    border-radius: 5px;
+    flex-shrink: 0;
+}
+
+.tu-legend-label {
+    font-family: var(--t-font-sans);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 20px;
+    letter-spacing: -0.05px;
+    color: #fff;
+}
+
+.tu-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 40px;
+    min-width: 40px;
+    padding: 0;
+    border: none;
+    border-radius: 999px;
+    background: radial-gradient(circle at 50% 50%, #008bee 0%, #0074c6 95%);
+    box-shadow: 0 0 6px 0 #008bee;
+    color: #fff;
+    cursor: pointer;
+}
+
+.tu-action-pill {
+    padding: 0 16px;
+}
+
+.tu-action-label {
+    font-family: var(--t-font-sans);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    color: #fff;
+    opacity: 0.5;
+}
+
+.tu-matrix {
+    display: grid;
+    grid-template-columns: repeat(4, 2px);
+    grid-auto-rows: 2px;
+    gap: 2px;
+}
+
+.tu-matrix i {
+    display: block;
+    background: rgba(255, 255, 255, 0.35);
+    animation: tu-matrix-pulse var(--tu-matrix-cycle, 1200ms) ease-in-out infinite;
+    animation-delay: calc(var(--d, 0) * 1ms);
+}
+
+@keyframes tu-matrix-pulse {
+    0%,
+    45%,
+    100% {
+        background-color: rgba(255, 255, 255, 0.35);
+    }
+    15% {
+        background-color: #fff;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tu-matrix i {
+        animation: none !important;
+    }
+}
+
+@media (max-width: 640px) {
+    .tu-card {
+        padding: 16px 20px;
+        border-radius: 20px;
+    }
+
+    .tu-legend {
+        gap: 16px;
+    }
+
+    .tu-footer {
+        margin-top: 28px;
+    }
+}

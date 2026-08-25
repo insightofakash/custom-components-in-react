@@ -18,6 +18,7 @@
         Arial,
         sans-serif;
     --t-font-mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --t-font-mono-geist: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
     --t-dark-card-a: #262626;
     --t-dark-card-b: #3f3f3f;
@@ -106,5 +107,21 @@
     font-weight: 400;
     font-size: 14px;
     line-height: 22px;
+    letter-spacing: 0;
+}
+
+.type-mono-body {
+    font-family: var(--t-font-mono-geist);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16px;
+    letter-spacing: 0;
+}
+
+.type-mono-label {
+    font-family: var(--t-font-mono-geist);
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
     letter-spacing: 0;
 }
