@@ -1,8 +1,39 @@
+/* Global shell. Inherited :root typography (base font/line-height/letter-spacing)
+   is load-bearing — several controls (e.g. compare pills, seg toggle) rely on it. */
+:root {
+    --text: #6b6375;
+    --bg: #fff;
+    --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+
+    font: 18px/145% var(--sans);
+    letter-spacing: 0.18px;
+    color-scheme: light dark;
+    color: var(--text);
+    background: var(--bg);
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    @media (max-width: 1024px) {
+        font-size: 16px;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* Page background revealed by overscroll; pages paint over it. */
+        --bg: #16171d;
+    }
+}
+
+body {
+    margin: 0;
+}
+
 #root {
     width: 100%;
     max-width: 100%;
-    border-inline: none;
-    text-align: left;
 }
 
 .component-shell {

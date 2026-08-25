@@ -25,7 +25,8 @@
     pointer-events: none;
 }
 
-.chrome-btn {
+.chrome-btn,
+.chrome-hint {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -40,7 +41,8 @@
     transition: color 0.2s ease, background 0.2s ease;
 }
 
-.chrome-btn:hover {
+.chrome-btn:hover,
+.chrome-hint:hover {
     color: var(--t-strong);
     background: var(--t-surface);
 }
@@ -67,26 +69,6 @@
 
 .chrome-refresh {
     padding: 4px 6px;
-}
-
-.chrome-hint {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 10px;
-    border: none;
-    background: none;
-    border-radius: 8px;
-    color: var(--t-muted);
-    cursor: pointer;
-    pointer-events: auto;
-    font-family: inherit;
-    transition: color 0.2s ease, background 0.2s ease;
-}
-
-.chrome-hint:hover {
-    color: var(--t-strong);
-    background: var(--t-surface);
 }
 
 .chrome-kbd {

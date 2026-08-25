@@ -13,6 +13,20 @@ import {
 } from "@hugeicons/core-free-icons";
 import "./RevenueCard.css";
 
+const EASE_OUT = [0.22, 1, 0.36, 1];
+
+const barGrowTransition = (i) => ({
+    duration: 0.55,
+    ease: EASE_OUT,
+    delay: i * 0.05,
+});
+
+const barHoverTransition = (i) => ({
+    y: barGrowTransition(i),
+    height: barGrowTransition(i),
+    opacity: { duration: 0.25, ease: "easeOut" },
+});
+
 const MONTH_LABELS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
 const START_YEAR = 2022;
 const START_MONTH = 6;
@@ -191,7 +205,7 @@ function CountUp({ to }) {
         setRolling(true);
         const controls = animate(0, to, {
             duration: 1.1,
-            ease: [0.22, 1, 0.36, 1],
+            ease: EASE_OUT,
             onUpdate: (v) => {
                 if (ref.current) {
                     ref.current.textContent = Math.round(v).toLocaleString("en-US");
@@ -237,7 +251,7 @@ function SegToggle({ mode, onChange }) {
                         <motion.span
                             layoutId="seg-thumb"
                             className="seg-thumb"
-                            transition={{ type: "tween", duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                            transition={{ type: "tween", duration: 0.28, ease: EASE_OUT }}
                         />
                     )}
                     <span className="seg-icon">{opt.icon}</span>
@@ -519,7 +533,7 @@ function Chart({ mode, activeCompare }) {
                                         fill={SECONDARY}
                                         initial={{ y: PLOT_BOTTOM, height: 0 }}
                                         animate={{ y: yFor(metric.plot), height: PLOT_BOTTOM - yFor(metric.plot) }}
-                                        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: i * 0.05 }}
+                                        transition={barGrowTransition(i)}
                                     />
                                     <motion.rect
                                         x={xs[i] - 5}
@@ -532,11 +546,7 @@ function Chart({ mode, activeCompare }) {
                                             height: PLOT_BOTTOM - yFor(metric.plot),
                                             opacity: active === i ? 1 : 0,
                                         }}
-                                        transition={{
-                                            y: { duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: i * 0.05 },
-                                            height: { duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: i * 0.05 },
-                                            opacity: { duration: 0.25, ease: "easeOut" },
-                                        }}
+                                        transition={barHoverTransition(i)}
                                     />
                                     <motion.rect
                                         x={xs[i] + 1}
@@ -545,7 +555,7 @@ function Chart({ mode, activeCompare }) {
                                         fill="url(#barGrad)"
                                         initial={{ y: PLOT_BOTTOM, height: 0 }}
                                         animate={{ y: yFor(d.value), height: PLOT_BOTTOM - yFor(d.value) }}
-                                        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: i * 0.05 }}
+                                        transition={barGrowTransition(i)}
                                     />
                                     <motion.rect
                                         x={xs[i] + 1}
@@ -558,11 +568,7 @@ function Chart({ mode, activeCompare }) {
                                             height: PLOT_BOTTOM - yFor(d.value),
                                             opacity: active === i ? 1 : 0,
                                         }}
-                                        transition={{
-                                            y: { duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: i * 0.05 },
-                                            height: { duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: i * 0.05 },
-                                            opacity: { duration: 0.25, ease: "easeOut" },
-                                        }}
+                                        transition={barHoverTransition(i)}
                                     />
                                 </motion.g>
                             );
@@ -588,7 +594,7 @@ function Chart({ mode, activeCompare }) {
                             initial={{ opacity: 0, y: 3 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: 3 }}
-                            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                            transition={{ duration: 0.25, ease: EASE_OUT }}
                         >
                             <circle
                                 cx={xs[active] + dotShift}
@@ -697,10 +703,6 @@ function RevenueCard() {
         }
     };
 
-    const handlePillsScroll = () => {
-        updateScrollState();
-    };
-
     useEffect(() => {
         const el = pillsRef.current;
         if (!el) return undefined;
@@ -710,17 +712,10 @@ function RevenueCard() {
         return () => ro.disconnect();
     }, []);
 
-    const scrollPills = () => {
+    const scrollPillsBy = (delta) => {
         const el = pillsRef.current;
         if (el) {
-            el.scrollBy({ left: 180, behavior: "smooth" });
-        }
-    };
-
-    const scrollPillsLeft = () => {
-        const el = pillsRef.current;
-        if (el) {
-            el.scrollBy({ left: -180, behavior: "smooth" });
+            el.scrollBy({ left: delta, behavior: "smooth" });
         }
     };
 
@@ -738,7 +733,7 @@ function RevenueCard() {
             className="revenue-card"
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.6, ease: EASE_OUT }}
         >
             <header className="card-header">
                 <div className="header-left">
@@ -780,7 +775,7 @@ function RevenueCard() {
                     <div
                         className="compare-pills"
                         ref={pillsRef}
-                        onScroll={handlePillsScroll}
+                        onScroll={updateScrollState}
                         style={{ WebkitMaskImage: maskImage, maskImage }}
                     >
                         {COMPARE.map((p, i) => (
@@ -804,7 +799,7 @@ function RevenueCard() {
                     <button
                         type="button"
                         className={`scroll-arrow left ${pillsScrolled ? "show" : ""}`}
-                        onClick={scrollPillsLeft}
+                        onClick={() => scrollPillsBy(-180)}
                         aria-label="Scroll to previous options"
                     >
                         <ChevronLeftIcon />
@@ -812,7 +807,7 @@ function RevenueCard() {
                     <button
                         type="button"
                         className={`scroll-arrow right ${canScrollRight ? "show" : ""}`}
-                        onClick={scrollPills}
+                        onClick={() => scrollPillsBy(180)}
                         aria-label="Scroll to more options"
                     >
                         <ChevronRightIcon />
