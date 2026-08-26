@@ -1,0 +1,145 @@
+.tree-nav {
+    display: flex;
+    justify-content: center;
+}
+
+.tree-nav-inner {
+    width: 100%;
+    max-width: 320px;
+}
+
+.tn-tree {
+    position: relative;
+    padding-left: 28px;
+}
+
+/* Bleeds WIRE_PAD (40px) past the tree on every side so dangling ropes
+   are not clipped — keep in sync with WIRE_PAD in TreeNav.jsx */
+.tn-wires {
+    position: absolute;
+    inset: -40px;
+    width: calc(100% + 80px);
+    height: calc(100% + 80px);
+    pointer-events: none;
+}
+
+.tn-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    position: relative;
+}
+
+.tn-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: none;
+    border: 0;
+    margin: 0;
+    padding: 7px 8px;
+    cursor: pointer;
+    transition: color 0.25s ease;
+}
+
+.tn-caret {
+    position: relative;
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    color: var(--t-subtle);
+    transition: color 0.25s ease;
+}
+
+.tn-item:hover .tn-caret {
+    color: var(--t-muted);
+}
+
+.tn-item.active .tn-caret {
+    color: currentColor;
+}
+
+.tn-caret-icon {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    filter: blur(4px);
+    transform: rotate(-90deg) scale(0.6);
+    transition:
+        opacity 0.28s ease,
+        filter 0.28s ease,
+        transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tn-caret-icon.shown-when-closed {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+}
+
+.tn-caret.open .tn-caret-icon.shown-when-open {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+}
+
+.tn-caret.open .tn-caret-icon.shown-when-closed {
+    opacity: 0;
+    filter: blur(4px);
+    transform: rotate(90deg) scale(0.6);
+}
+
+.tn-item--l1 {
+    color: var(--t-strong);
+}
+
+.tn-item--l2 {
+    color: var(--t-body);
+    margin-left: 24px;
+}
+
+.tn-item--l3 {
+    color: var(--t-muted);
+    margin-left: 48px;
+}
+
+.tn-item:hover {
+    color: var(--t-strong);
+}
+
+.tn-item.active {
+    color: var(--t-accent-orange);
+}
+
+.tn-item:focus-visible {
+    outline: 1px solid var(--t-subtle);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+.tn-collapse {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tn-collapse.open {
+    grid-template-rows: 1fr;
+}
+
+.tn-collapse-inner {
+    overflow: hidden;
+    min-height: 0;
+}
+
+.tn-collapse .tn-list {
+    padding-top: 2px;
+    padding-bottom: 4px;
+}

@@ -7,7 +7,9 @@ function ComponentPage({ component }) {
 
     return (
         <div className="component-shell">
-            <ShowcaseChrome onRefresh={() => setPlayKey((k) => k + 1)} />
+            {component.chrome !== false && (
+                <ShowcaseChrome onRefresh={() => setPlayKey((k) => k + 1)} />
+            )}
             <section className="component-stage">
                 <Cmp key={playKey} />
             </section>

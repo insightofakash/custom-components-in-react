@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
 import ComponentIndex from "./components/ComponentIndex/ComponentIndex.jsx";
@@ -6,7 +7,8 @@ import { COMPONENTS } from "./components/registry.jsx";
 
 function App() {
     return (
-        <Routes>
+        <Suspense fallback={null}>
+            <Routes>
             <Route path="/" element={<ComponentIndex />} />
             {COMPONENTS.map((c) => (
                 <Route
@@ -16,7 +18,8 @@ function App() {
                 />
             ))}
             <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+            </Routes>
+        </Suspense>
     );
 }
 

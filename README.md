@@ -15,10 +15,16 @@ Each component has its own route, listed on the **Components** index page
 - **Model Usage** — `/model-usage` — a dark stacked bar chart of cumulative
   model usage against a daily limit, with a glowing limit badge, live indicator,
   and an interactive hover tooltip with per-model breakdowns.
+- **Pill Nav** — `/pill-nav` — a gooey pill navigation with hover-reactive
+  segments and a liquid-morphing dropdown menu.
 - **Token Usage** — `/token-usage` — a segmented meter of per-model token usage
   against a 1M limit: rows glow on hover, lock in on select with a brightening
   ramp toward the cursor, and a broom action "compresses" the selected row
   (rolling `980.02K → 560.58K` transition, spinner pill, check to reset).
+- **Tree Nav** — `/tree-nav` — a minimal 3-level text navigation whose hierarchy
+  links are real rope physics: every parent-child wire is a verlet-simulated
+  rope pinned at both ends that dangles, swings on expand/collapse, and bends
+  away as the cursor approaches.
 
 More components coming soon — add them in `src/components/registry.jsx` and they
 automatically get their own route and index entry.
