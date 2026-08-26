@@ -36,7 +36,7 @@ const MODELS = [
     { key: "mimo", label: "Mimo 3", color: "var(--t-accent-red)" },
 ];
 
-const INITIAL_USAGE = { fable: 980020, flash: 191490, mimo: 595750 };
+const INITIAL_USAGE = { fable: 764870, flash: 191490, mimo: 595750 };
 const COMPRESS_RATIO = 560580 / 980020;
 const COMPRESSED_USAGE = { fable: 560580 };
 
@@ -249,7 +249,7 @@ function TokenUsage() {
     const handleRowEnter = (key) => {
         if (phase !== "idle" || selected) return;
         if (hovered !== key) {
-            sounds.hoverDeep();
+            sounds.hoverDeep(0.4);
         }
         setHovered(key);
     };
@@ -263,7 +263,7 @@ function TokenUsage() {
     const handleLegendEnter = (key) => {
         if (phase !== "idle") return;
         if (legendHover !== key) {
-            sounds.hoverSub();
+            sounds.hoverSub(0.4);
         }
         setLegendHover(key);
     };
@@ -284,7 +284,7 @@ function TokenUsage() {
         }
         const from = usage[key];
         const to = compressedValue(from, key);
-        sounds.whoosh();
+        sounds.whoosh(0.5);
         sounds.ratchet();
         setFromValue(from);
         setCompressFrom(filledPills(from));
@@ -298,7 +298,7 @@ function TokenUsage() {
         setUsage((prev) => ({ ...prev, [key]: to }));
         compressTimer.current = setTimeout(() => {
             setPhase("compressed");
-            sounds.success();
+            sounds.success(0.1);
             resetTimer.current = setTimeout(() => {
                 setPhase("idle");
                 setSelected(null);

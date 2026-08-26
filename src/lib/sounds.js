@@ -177,7 +177,7 @@ function playDrop(c, t, params) {
     osc.stop(t + 0.12 * params.decayMult);
 }
 
-function playSuccess(c, t, params) {
+function playSuccess(c, t, params, vol = 1) {
     const notes = [523.25, 659.25, 783.99].map((n) => n * params.pitchMult);
     const spacing = 0.08 * params.decayMult;
 
@@ -190,7 +190,7 @@ function playSuccess(c, t, params) {
 
         const start = t + i * spacing;
         gain.gain.setValueAtTime(0, start);
-        gain.gain.linearRampToValueAtTime(0.25 * params.gainMult, start + 0.01);
+        gain.gain.linearRampToValueAtTime(0.25 * params.gainMult * vol, start + 0.01);
         gain.gain.exponentialRampToValueAtTime(
             0.001,
             start + 0.15 * params.decayMult,
@@ -362,7 +362,7 @@ function playHoverDeep(c, t, vol = 1) {
     osc.stop(start + attack + decay + 0.04);
 }
 
-function playRatchet(c, t, params) {
+function playRatchet(c, t, params, vol = 1) {
     const ticks = 20;
     let time = t + 0.18;
     for (let i = 0; i < ticks; i++) {
@@ -380,7 +380,7 @@ function playRatchet(c, t, params) {
         filter.frequency.value = 1000 - 620 * progress;
         filter.Q.value = 8;
         const gain = c.createGain();
-        gain.gain.value = 0.3 * (1 - 0.3 * progress) * params.gainMult;
+        gain.gain.value = (1 - 0.3 * progress) * params.gainMult * vol;
         noise.connect(filter);
         filter.connect(gain);
         gain.connect(master);
@@ -389,7 +389,7 @@ function playRatchet(c, t, params) {
     }
 }
 
-function playWhoosh(c, t, params) {
+function playWhoosh(c, t, params, vol = 1) {
     const duration = 0.3 * params.decayMult;
     const buffer = c.createBuffer(1, c.sampleRate * duration, c.sampleRate);
     const data = buffer.getChannelData(0);
@@ -414,7 +414,7 @@ function playWhoosh(c, t, params) {
 
     const gain = c.createGain();
     gain.gain.setValueAtTime(0.0001, t);
-    gain.gain.exponentialRampToValueAtTime(0.5, t + 0.03);
+    gain.gain.exponentialRampToValueAtTime(0.5 * vol, t + 0.03);
     gain.gain.exponentialRampToValueAtTime(0.0001, t + duration);
 
     noise.connect(filter);
@@ -430,7 +430,7 @@ const sounds = {
     toggle: () => play(playToggle),
     tick: () => play(playTick),
     drop: () => play(playDrop),
-    success: () => play(playSuccess),
+    success: (vol = 1) => play((c, t, p) => playSuccess(c, t, p, vol)),
     error: () => play(playError),
     warning: () => play(playWarning),
     startup: () => play(playStartup),
@@ -449,8 +449,8 @@ const sounds = {
         if (!c) return;
         playHoverDeep(c, c.currentTime, vol);
     },
-    ratchet: () => play(playRatchet),
-    whoosh: () => play(playWhoosh),
+    ratchet: (vol = 1) => play((c, t, p) => playRatchet(c, t, p, vol)),
+    whoosh: (vol = 1) => play((c, t, p) => playWhoosh(c, t, p, vol)),
     setFeel: (feel) => {
         currentFeel = feel;
     },
