@@ -1,6 +1,14 @@
 .tree-nav {
+    align-self: flex-start;
     display: flex;
     justify-content: center;
+    padding-top: 120px;
+    opacity: 1;
+    transition: opacity 0.25s ease;
+}
+
+.tree-nav:hover {
+    opacity: 0.9;
 }
 
 .tree-nav-inner {
@@ -43,7 +51,7 @@
     margin: 0;
     padding: 7px 8px;
     cursor: pointer;
-    transition: color 0.25s ease;
+    transition: color 0.15s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .tn-caret {
@@ -114,7 +122,11 @@
     color: var(--t-strong);
 }
 
-.tn-item.active {
+.tn-item.active:not([aria-expanded]) {
+    color: var(--t-accent-orange);
+}
+
+.tn-item[aria-expanded="true"] {
     color: var(--t-accent-orange);
 }
 
@@ -137,6 +149,12 @@
 .tn-collapse-inner {
     overflow: hidden;
     min-height: 0;
+    filter: blur(3px);
+    transition: filter 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tn-collapse.open .tn-collapse-inner {
+    filter: blur(0);
 }
 
 .tn-collapse .tn-list {

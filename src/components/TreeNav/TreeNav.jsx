@@ -97,8 +97,8 @@ const NAV_DATA = [
 
 /* Must match .tn-wires inset/size in TreeNav.css */
 const ROPE_POINTS = 18;
-const ROPE_SLACK = 1.32;
-const GRAVITY = 0.38;
+const ROPE_SLACK = 1.08;
+const GRAVITY = 0.28;
 const DRAG = 0.988;
 const ITERATIONS = 3;
 const MAX_SPEED = 14;
@@ -107,7 +107,7 @@ const MOUSE_RADIUS = 35;
 const MOUSE_PUSH = 3;
 const WIRE_WIDTH = 2;
 const SUB_WIRE_WIDTH = 1.5;
-const WIRE_OPACITY = 0.68;
+const WIRE_OPACITY = 1;
 const SUB_WIRE_OPACITY = 0.42;
 const FADE_SPEED = 0.18;
 const WIRE_PAD = 40;
