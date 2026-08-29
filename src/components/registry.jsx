@@ -3,6 +3,7 @@ import ModelUsage from "./ModelUsage/ModelUsage.jsx";
 import PillNav from "./PillNav/PillNav.jsx";
 import TokenUsage from "./TokenUsage/TokenUsage.jsx";
 import TreeNav from "./TreeNav/index.js";
+import ClusteringChart from "./ClusteringChart/ClusteringChart.jsx";
 
 export const COMPONENTS = [
     { id: "revenue-card", title: "Revenue Card", path: "/revenue-card", Component: RevenueCard },
@@ -14,5 +15,11 @@ export const COMPONENTS = [
         title: "Tree Nav",
         path: "/tree-nav",
         Component: TreeNav,
+    },
+    {
+        id: "clustering-chart",
+        title: "Customer Clusters",
+        path: "/clustering-chart",
+        Component: ClusteringChart,
     },
 ];
