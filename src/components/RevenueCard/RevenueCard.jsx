@@ -363,6 +363,7 @@ function Chart({ mode, activeCompare }) {
 
     const data = mode === "bar" ? QUARTERS : MONTHS;
     const xPos = mode === "bar" ? barXs : xs;
+    const axisX = (i) => (mode === "bar" ? xs[i * 3] : xPos[i]);
 
     useEffect(() => {
         const el = ref.current;
@@ -506,8 +507,8 @@ const isAll = activeCompare === "all";
                         <line
                             key={`gv-${d.year}`}
                             className="grid-line-v"
-                            x1={xPos[i]}
-                            x2={xPos[i]}
+                            x1={axisX(i)}
+                            x2={axisX(i)}
                             y1={PLOT_TOP}
                             y2={PLOT_BOTTOM}
                         />
@@ -530,7 +531,7 @@ const isAll = activeCompare === "all";
                         <text
                             key={`x-year-${d.year}`}
                             className="axis-label"
-                            x={xPos[i]}
+                            x={axisX(i)}
                             y={PLOT_BOTTOM + 22}
                             textAnchor="middle"
                         >
