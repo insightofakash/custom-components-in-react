@@ -41,7 +41,7 @@
 }
 
 .chart-tooltip-row.muted {
-    opacity: 0.55;
+    opacity: 1;
 }
 
 .chart-tooltip-row.highlighted {

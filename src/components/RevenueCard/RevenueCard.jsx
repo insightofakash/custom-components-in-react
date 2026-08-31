@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, animate } from "framer-motion";
 import { HugeiconsIcon } from "@hugeicons/react";
 import sounds from "../../lib/sounds.js";
@@ -16,9 +16,9 @@ import "./RevenueCard.css";
 const EASE_OUT = [0.22, 1, 0.36, 1];
 
 const barGrowTransition = (i) => ({
-    duration: 0.55,
+    duration: 0.275,
     ease: EASE_OUT,
-    delay: i * 0.05,
+    delay: i * 0.025,
 });
 
 const barHoverTransition = (i) => ({
@@ -39,6 +39,24 @@ const COMPARE = [
     { id: "retention", label: "Customer Retention" },
     { id: "margin", label: "Gross Margin" },
 ];
+
+const COMPARE_COLORS = {
+    orders: "#F59E0B",
+    aov: "#8B5CF6",
+    customers: "#EC4899",
+    retention: "#14B8A6",
+    margin: "#F97316",
+};
+
+const COMPARE_DARK = {
+    orders: "#B45309",
+    aov: "#6D28D9",
+    customers: "#BE185D",
+    retention: "#0F766E",
+    margin: "#C2410C",
+};
+
+const COMPARE_OPTIONS = [{ id: "all", label: "All" }, ...COMPARE];
 
 function metricNoise(id, i) {
     let seed = 97;
@@ -85,8 +103,8 @@ const METRIC_FORMAT = {
     margin: (v) => `${round2(v)}%`,
 };
 
-const SECONDARY = "#8A97A6";
-const SECONDARY_DARK = "#5D6A78";
+const SECONDARY = "#059669";
+const SECONDARY_DARK = "#047857";
 
 function buildMonths() {
     const out = [];
@@ -133,7 +151,56 @@ const Y_MAX = 120;
 const MONTHS = buildMonths();
 const TOTAL_REVENUE = MONTHS.reduce((s, d) => s + d.revenueNum, 0);
 
+const QUARTER_AGG = {
+    orders: "sum",
+    aov: "avg",
+    customers: "sum",
+    retention: "avg",
+    margin: "avg",
+};
+
+function buildQuarters() {
+    const out = [];
+    for (let i = 0; i < MONTHS.length; i += 3) {
+        const group = MONTHS.slice(i, i + 3);
+        const abs = START_MONTH + i;
+        const year = START_YEAR + Math.floor(abs / 12);
+        const m = abs % 12;
+        const qNum = Math.floor(m / 3) + 1;
+        const avg = (arr) => Math.round(arr.reduce((s, v) => s + v, 0) / arr.length);
+        const metrics = {};
+        for (const c of COMPARE) {
+            const plots = group.map((d) => d.metrics[c.id].plot);
+            const vals = group.map((d) => d.metrics[c.id].val);
+            metrics[c.id] = {
+                plot: avg(plots),
+                val: QUARTER_AGG[c.id] === "sum" ? vals.reduce((s, v) => s + v, 0) : avg(vals),
+            };
+        }
+        const revenueNum = group.reduce((s, d) => s + d.revenueNum, 0);
+        out.push({
+            label: `Q${qNum}`,
+            year,
+            fullLabel: `Q${qNum} ${year}`,
+            showYear: m < 3,
+            value: avg(group.map((d) => d.value)),
+            revenueNum,
+            revenue: `$${revenueNum.toLocaleString("en-US")}`,
+            metrics,
+        });
+    }
+    return out;
+}
+
+const QUARTERS = buildQuarters();
+
 const xs = MONTHS.map((_, i) => PLOT_LEFT + (i / (MONTHS.length - 1)) * PLOT_W);
+const barXs = QUARTERS.map((_, i) => {
+    const n = QUARTERS.length;
+    const binW = PLOT_W / n;
+    const clusterW = binW - 12;
+    return PLOT_LEFT + clusterW / 2 + (i / (n - 1)) * (PLOT_W - clusterW);
+});
 const yFor = (v) => PLOT_BOTTOM - (v / Y_MAX) * PLOT_H;
 const pts = MONTHS.map((d, i) => ({ x: xs[i], y: yFor(d.value) }));
 
@@ -235,29 +302,40 @@ function SegToggle({ mode, onChange }) {
         { id: "line", label: "Line", icon: <LineIcon /> },
         { id: "bar", label: "Bar", icon: <BarIcon /> },
     ];
+    const btnRefs = useRef({});
+    const [thumb, setThumb] = useState({ x: 0, width: 0 });
+
+    useLayoutEffect(() => {
+        const btn = btnRefs.current[mode];
+        if (!btn) return;
+        const { offsetLeft, offsetWidth } = btn;
+        setThumb({ x: offsetLeft, width: offsetWidth });
+    }, [mode]);
+
     return (
         <div className="seg-toggle">
             {options.map((opt) => (
                 <button
                     key={opt.id}
                     type="button"
+                    ref={(el) => {
+                        btnRefs.current[opt.id] = el;
+                    }}
                     className={`seg-btn ${mode === opt.id ? "active" : ""}`}
                     onClick={() => {
                         sounds.toggle();
                         onChange(opt.id);
                     }}
                 >
-                    {mode === opt.id && (
-                        <motion.span
-                            layoutId="seg-thumb"
-                            className="seg-thumb"
-                            transition={{ type: "tween", duration: 0.28, ease: EASE_OUT }}
-                        />
-                    )}
                     <span className="seg-icon">{opt.icon}</span>
                     <span className="seg-label">{opt.label}</span>
                 </button>
             ))}
+            <motion.span
+                className="seg-thumb"
+                animate={{ x: thumb.x, width: thumb.width }}
+                transition={{ type: "tween", duration: 0.28, ease: EASE_OUT }}
+            />
         </div>
     );
 }
@@ -265,12 +343,26 @@ function SegToggle({ mode, onChange }) {
 const TOOLTIP_W = 278;
 const TOOLTIP_H = 110;
 
+const barGeom = (centerX, n, barCount) => {
+    const binW = PLOT_W / n;
+    const gap = 4;
+    const sidePad = 6;
+    const clusterW = binW - sidePad * 2;
+    const barW = (clusterW - gap * (barCount - 1)) / barCount;
+    const startX = centerX - clusterW / 2;
+    const centers = Array.from({ length: barCount }, (_, k) => startX + barW / 2 + k * (barW + gap));
+    return { centers, barW };
+};
+
 function Chart({ mode, activeCompare }) {
     const ref = useRef(null);
     const [active, setActive] = useState(null);
     const [cursorX, setCursorX] = useState(0);
     const [cursorY, setCursorY] = useState(0);
     const [chartW, setChartW] = useState(0);
+
+    const data = mode === "bar" ? QUARTERS : MONTHS;
+    const xPos = mode === "bar" ? barXs : xs;
 
     useEffect(() => {
         const el = ref.current;
@@ -285,8 +377,8 @@ function Chart({ mode, activeCompare }) {
     const nearestIndex = (xSvg) => {
         let idx = 0;
         let best = Infinity;
-        MONTHS.forEach((d, i) => {
-            const dist = Math.abs(xSvg - xs[i]);
+        data.forEach((d, i) => {
+            const dist = Math.abs(xSvg - xPos[i]);
             if (dist < best) {
                 best = dist;
                 idx = i;
@@ -325,10 +417,23 @@ function Chart({ mode, activeCompare }) {
           })
         : null;
 
-    const activeMetric = COMPARE.find((c) => c.id === activeCompare);
-    const metricPts = MONTHS.map((d, i) => ({ x: xs[i], y: yFor(d.metrics[activeCompare].plot) }));
-    const metricPath = smoothPath(metricPts);
-    const dotShift = mode === "bar" ? 3 : 0;
+const isAll = activeCompare === "all";
+    const series = (
+        isAll
+            ? COMPARE
+            : [COMPARE.find((c) => c.id === activeCompare)]
+    ).map((c, i) => ({
+        key: c.id,
+        id: c.id,
+        label: c.label,
+        color: isAll ? COMPARE_COLORS[c.id] : SECONDARY,
+        dark: isAll ? COMPARE_DARK[c.id] : SECONDARY_DARK,
+        order: i,
+    }));
+    const seriesPath = (id) => {
+        const pts = MONTHS.map((d, i) => ({ x: xs[i], y: yFor(d.metrics[id].plot) }));
+        return smoothPath(pts);
+    };
 
     return (
         <div
@@ -351,11 +456,11 @@ function Chart({ mode, activeCompare }) {
                     >
                         <stop
                             offset="0%"
-                            stopColor="#2C836B"
+                            stopColor="#2563EB"
                         />
                         <stop
                             offset="100%"
-                            stopColor="#2C836B"
+                            stopColor="#2563EB"
                             stopOpacity="0"
                         />
                     </linearGradient>
@@ -368,27 +473,11 @@ function Chart({ mode, activeCompare }) {
                     >
                         <stop
                             offset="0%"
-                            stopColor="#389B80"
+                            stopColor="#60A5FA"
                         />
                         <stop
                             offset="100%"
-                            stopColor="#2C836B"
-                        />
-                    </linearGradient>
-                    <linearGradient
-                        id="barGrad"
-                        x1="0"
-                        y1="0"
-                        x2="1"
-                        y2="1"
-                    >
-                        <stop
-                            offset="0%"
-                            stopColor="#9EDDC6"
-                        />
-                        <stop
-                            offset="100%"
-                            stopColor="#7DC6A8"
+                            stopColor="#2563EB"
                         />
                     </linearGradient>
                     <filter
@@ -412,13 +501,13 @@ function Chart({ mode, activeCompare }) {
                         y2={yFor(v)}
                     />
                 ))}
-                {MONTHS.map((d, i) =>
+                {data.map((d, i) =>
                     d.showYear ? (
                         <line
                             key={`gv-${d.year}`}
                             className="grid-line-v"
-                            x1={xs[i]}
-                            x2={xs[i]}
+                            x1={xPos[i]}
+                            x2={xPos[i]}
                             y1={PLOT_TOP}
                             y2={PLOT_BOTTOM}
                         />
@@ -436,12 +525,12 @@ function Chart({ mode, activeCompare }) {
                         {v}
                     </text>
                 ))}
-                {MONTHS.map((d, i) =>
+                {data.map((d, i) =>
                     d.showYear ? (
                         <text
                             key={`x-year-${d.year}`}
                             className="axis-label"
-                            x={xs[i]}
+                            x={xPos[i]}
                             y={PLOT_BOTTOM + 22}
                             textAnchor="middle"
                         >
@@ -453,7 +542,7 @@ function Chart({ mode, activeCompare }) {
                 <AnimatePresence mode="wait">
                     {mode === "line" ? (
                         <motion.g
-                            key="line"
+                            key={`line-${activeCompare}`}
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
@@ -464,32 +553,33 @@ function Chart({ mode, activeCompare }) {
                                 fill="url(#areaGrad)"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 0.5 }}
-                                transition={{ duration: 0.9, delay: 0.45 }}
+                                transition={{ duration: 0.7, ease: EASE_OUT, delay: 0.3 }}
                             />
                             <motion.path
                                 d={linePath}
                                 fill="none"
-                                stroke="#2C836B"
+                                stroke="#2563EB"
                                 strokeWidth={2}
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
                                 initial={{ pathLength: 0 }}
                                 animate={{ pathLength: 1 }}
-                                transition={{ duration: 1.2, ease: [0.4, 0, 0.2, 1], delay: 0.15 }}
+                                transition={{ duration: 0.9, ease: [0.4, 0, 0.2, 1] }}
                             />
-                            <motion.path
-                                key={`cmp-line-${activeCompare}`}
-                                d={metricPath}
-                                fill="none"
-                                stroke={SECONDARY}
-                                strokeWidth={2}
-                                strokeDasharray="3 5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                initial={{ pathLength: 0 }}
-                                animate={{ pathLength: 1 }}
-                                transition={{ duration: 1.2, ease: [0.4, 0, 0.2, 1], delay: 0.25 }}
-                            />
+                            {series.map((s) => (
+                                <motion.path
+                                    key={`cmp-line-${s.key}`}
+                                    d={seriesPath(s.id)}
+                                    fill="none"
+                                    stroke={s.color}
+                                    strokeWidth={2}
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    initial={{ opacity: 0, pathLength: 0 }}
+                                    animate={{ opacity: 1, pathLength: 1 }}
+                                    transition={{ duration: 0.9, ease: [0.4, 0, 0.2, 1], delay: 0.1 }}
+                                />
+                            ))}
                             <motion.circle
                                 cx={pts[pts.length - 1].x}
                                 cy={pts[pts.length - 1].y}
@@ -498,7 +588,7 @@ function Chart({ mode, activeCompare }) {
                                 filter="url(#softBlur)"
                                 initial={{ scale: 0, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 0.35 }}
-                                transition={{ delay: 1, duration: 0.5 }}
+                                transition={{ delay: 0.9, duration: 0.4 }}
                                 style={{ transformBox: "fill-box", transformOrigin: "center" }}
                             />
                             <motion.circle
@@ -510,65 +600,68 @@ function Chart({ mode, activeCompare }) {
                                 strokeWidth={1.5}
                                 initial={{ scale: 0 }}
                                 animate={{ scale: 1 }}
-                                transition={{ delay: 1.05, type: "spring", stiffness: 400, damping: 18 }}
+                                transition={{ delay: 0.95, type: "spring", stiffness: 400, damping: 18 }}
                                 style={{ transformBox: "fill-box", transformOrigin: "center" }}
                             />
                         </motion.g>
                     ) : (
                         <motion.g
-                            key="bar"
+                            key={`bar-${activeCompare}`}
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.25 }}
                         >
-                            {MONTHS.map((d, i) => {
-                            const metric = d.metrics[activeCompare];
+                            {data.map((d, i) => {
+                            const g = barGeom(xPos[i], data.length, series.length + 1);
+                            const rx = Math.min(g.barW / 2, 3);
                             return (
-                                <motion.g key={`bar-${i}`}>
+                                <motion.g key={`bar-${i}`} animate={{ opacity: active != null && active !== i ? 0.2 : 1 }} transition={{ duration: 0.2, ease: "easeOut" }}>
+                                    {series.map((s, si) => {
+                                        const metric = d.metrics[s.id];
+                                        return (
+                                            <motion.g key={`bar-s-${s.key}-${i}`}>
+                                                <motion.rect
+                                                    x={g.centers[si] - g.barW / 2}
+                                                    width={g.barW}
+                                                    rx={rx}
+                                                    fill={s.color}
+                                                    initial={{ y: PLOT_BOTTOM, height: 0 }}
+                                                    animate={{ y: yFor(metric.plot), height: PLOT_BOTTOM - yFor(metric.plot) }}
+                                                    transition={barGrowTransition(i)}
+                                                />
+                                                <motion.rect
+                                                    x={g.centers[si] - g.barW / 2}
+                                                    width={g.barW}
+                                                    rx={rx}
+                                                    fill={s.dark}
+                                                    initial={{ y: PLOT_BOTTOM, height: 0, opacity: 0 }}
+                                                    animate={{
+                                                        y: yFor(metric.plot),
+                                                        height: PLOT_BOTTOM - yFor(metric.plot),
+                                                        opacity: active === i ? 1 : 0,
+                                                    }}
+                                                    transition={barHoverTransition(i)}
+                                                />
+                                            </motion.g>
+                                        );
+                                    })}
                                     <motion.rect
-                                        x={xs[i] - 5}
-                                        width={4}
-                                        rx={2}
-                                        fill={SECONDARY}
+                                        x={g.centers[series.length] - g.barW / 2}
+                                        width={g.barW}
+                                        rx={rx}
+                                        fill="#2563EB"
                                         initial={{ y: PLOT_BOTTOM, height: 0 }}
-                                        animate={{ y: yFor(metric.plot), height: PLOT_BOTTOM - yFor(metric.plot) }}
-                                        transition={barGrowTransition(i)}
-                                    />
-                                    <motion.rect
-                                        x={xs[i] - 5}
-                                        width={4}
-                                        rx={2}
-                                        fill={SECONDARY_DARK}
-                                        initial={{ y: PLOT_BOTTOM, height: 0, opacity: 0 }}
-                                        animate={{
-                                            y: yFor(metric.plot),
-                                            height: PLOT_BOTTOM - yFor(metric.plot),
-                                            opacity: active === i ? 1 : 0,
-                                        }}
-                                        transition={barHoverTransition(i)}
-                                    />
-                                    <motion.rect
-                                        x={xs[i] + 1}
-                                        width={4}
-                                        rx={2}
-                                        fill="url(#barGrad)"
-                                        initial={{ y: PLOT_BOTTOM, height: 0 }}
-                                        animate={{ y: yFor(d.value), height: PLOT_BOTTOM - yFor(d.value) }}
-                                        transition={barGrowTransition(i)}
-                                    />
-                                    <motion.rect
-                                        x={xs[i] + 1}
-                                        width={4}
-                                        rx={2}
-                                        fill="#03523B"
-                                        initial={{ y: PLOT_BOTTOM, height: 0, opacity: 0 }}
                                         animate={{
                                             y: yFor(d.value),
                                             height: PLOT_BOTTOM - yFor(d.value),
-                                            opacity: active === i ? 1 : 0,
+                                            fill: active === i ? "#1D4ED8" : "#2563EB",
                                         }}
-                                        transition={barHoverTransition(i)}
+                                        transition={{
+                                            y: barGrowTransition(i),
+                                            height: barGrowTransition(i),
+                                            fill: { duration: 0.2, ease: "easeOut" },
+                                        }}
                                     />
                                 </motion.g>
                             );
@@ -577,18 +670,18 @@ function Chart({ mode, activeCompare }) {
                     )}
                 </AnimatePresence>
 
-                {MONTHS.map((d, i) => (
+                {data.map((d, i) => (
                     <circle
                         key={`hit-${i}`}
                         className="hit-dot"
-                        cx={xs[i]}
+                        cx={xPos[i]}
                         cy={yFor(d.value)}
                         r={14}
                     />
                 ))}
 
                 <AnimatePresence>
-                    {active != null && (
+                    {active != null && mode !== "bar" && (
                         <motion.g
                             key={`active-${active}`}
                             initial={{ opacity: 0, y: 3 }}
@@ -596,36 +689,48 @@ function Chart({ mode, activeCompare }) {
                             exit={{ opacity: 0, y: 3 }}
                             transition={{ duration: 0.25, ease: EASE_OUT }}
                         >
-                            <circle
-                                cx={xs[active] + dotShift}
-                                cy={yFor(MONTHS[active].value)}
-                                r={9}
-                                fill="url(#dotGrad)"
-                                opacity={0.25}
-                            />
-                            <circle
-                                cx={xs[active] + dotShift}
-                                cy={yFor(MONTHS[active].value)}
-                                r={4.5}
-                                fill="#fff"
-                                stroke="#2C836B"
-                                strokeWidth={2}
-                            />
-                            <circle
-                                cx={xs[active] - dotShift}
-                                cy={yFor(MONTHS[active].metrics[activeCompare].plot)}
-                                r={9}
-                                fill={SECONDARY}
-                                opacity={0.25}
-                            />
-                            <circle
-                                cx={xs[active] - dotShift}
-                                cy={yFor(MONTHS[active].metrics[activeCompare].plot)}
-                                r={4.5}
-                                fill="#fff"
-                                stroke={SECONDARY}
-                                strokeWidth={2}
-                            />
+                            {(() => {
+                            const lift = 0;
+                            const centers = Array.from({ length: series.length + 1 }, () => xPos[active]);
+                            return (
+                                <>
+                                    <circle
+                                        cx={xPos[active]}
+                                        cy={yFor(data[active].value) - lift}
+                                        r={9}
+                                        fill="url(#dotGrad)"
+                                        opacity={0.25}
+                                    />
+                                    <circle
+                                        cx={xPos[active]}
+                                        cy={yFor(data[active].value) - lift}
+                                        r={4.5}
+                                        fill="#fff"
+                                        stroke="#2563EB"
+                                        strokeWidth={2}
+                                    />
+                                    {series.map((s, si) => (
+                                        <g key={`active-s-${s.key}`}>
+                                            <circle
+                                                cx={centers[si]}
+                                                cy={yFor(data[active].metrics[s.id].plot) - lift}
+                                                r={9}
+                                                fill={s.color}
+                                                opacity={0.25}
+                                            />
+                                            <circle
+                                                cx={centers[si]}
+                                                cy={yFor(data[active].metrics[s.id].plot) - lift}
+                                                r={4.5}
+                                                fill="#fff"
+                                                stroke={s.color}
+                                                strokeWidth={2}
+                                            />
+                                        </g>
+                                    ))}
+                                </>
+                            );
+                        })()}
                         </motion.g>
                     )}
                 </AnimatePresence>
@@ -641,8 +746,8 @@ function Chart({ mode, activeCompare }) {
                         >
                             <line
                                 className="crosshair-line"
-                                x1={xs[active]}
-                                x2={xs[active]}
+                                x1={xPos[active]}
+                                x2={xPos[active]}
                                 y1={PLOT_TOP}
                                 y2={PLOT_BOTTOM}
                             />
@@ -650,16 +755,19 @@ function Chart({ mode, activeCompare }) {
                                 className="crosshair-line"
                                 x1={PLOT_LEFT}
                                 x2={PLOT_RIGHT}
-                                y1={yFor(MONTHS[active].value)}
-                                y2={yFor(MONTHS[active].value)}
+                                y1={yFor(data[active].value)}
+                                y2={yFor(data[active].value)}
                             />
-                            <line
-                                className="crosshair-line"
-                                x1={PLOT_LEFT}
-                                x2={PLOT_RIGHT}
-                                y1={yFor(MONTHS[active].metrics[activeCompare].plot)}
-                                y2={yFor(MONTHS[active].metrics[activeCompare].plot)}
-                            />
+                            {series.map((s) => (
+                                <line
+                                    key={`cross-${s.key}`}
+                                    className="crosshair-line"
+                                    x1={PLOT_LEFT}
+                                    x2={PLOT_RIGHT}
+                                    y1={yFor(data[active].metrics[s.id].plot)}
+                                    y2={yFor(data[active].metrics[s.id].plot)}
+                                />
+                            ))}
                         </motion.g>
                     )}
                 </AnimatePresence>
@@ -667,21 +775,21 @@ function Chart({ mode, activeCompare }) {
 
             <ChartTooltip
                 position={tooltipPosition}
-                title={active != null ? MONTHS[active].fullLabel : ""}
+                title={active != null ? data[active].fullLabel : ""}
                 rows={active != null ? [
                     {
-                        dotColor: "#2C836B",
+                        dotColor: "#2563EB",
                         label: "Revenue",
-                        value: MONTHS[active].revenueNum,
+                        value: data[active].revenueNum,
                         format: moneyFormat,
                     },
-                    {
-                        dotColor: SECONDARY,
-                        label: activeMetric.label,
-                        value: MONTHS[active].metrics[activeCompare].val,
-                        format: METRIC_FORMAT[activeCompare],
+                    ...series.map((s) => ({
+                        dotColor: s.color,
+                        label: s.label,
+                        value: data[active].metrics[s.id].val,
+                        format: METRIC_FORMAT[s.id],
                         muted: true,
-                    },
+                    })),
                 ] : []}
             />
         </div>
@@ -778,11 +886,11 @@ function RevenueCard() {
                         onScroll={updateScrollState}
                         style={{ WebkitMaskImage: maskImage, maskImage }}
                     >
-                        {COMPARE.map((p, i) => (
+                        {COMPARE_OPTIONS.map((p, i) => (
                             <motion.button
                                 key={p.id}
                                 type="button"
-                                className={`pill ${p.id === activeCompare ? "active" : ""}`}
+                                className={`pill ${p.id === "all" ? "pill-all" : ""} ${p.id === activeCompare ? "active" : ""}`}
                                 onClick={(e) => {
                                     sounds.tick();
                                     setActiveCompare(p.id);

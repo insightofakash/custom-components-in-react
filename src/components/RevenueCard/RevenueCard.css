@@ -1,9 +1,10 @@
 .revenue-card {
     width: 100%;
     max-width: 644px;
-    background: #fff;
-    border-radius: 12px;
-    padding: 24px;
+    background: var(--t-bg);
+    font-family: var(--t-font-sans);
+    border-radius: 20px;
+    padding: 24px 24px 12px;
     box-sizing: border-box;
     box-shadow:
         0 2px 3px rgba(0, 0, 0, 0.01),
@@ -38,18 +39,18 @@
     font-size: 12px;
     font-weight: 500;
     letter-spacing: -0.02em;
-    color: rgba(0, 0, 0, 0.55);
+    color: var(--t-muted);
     white-space: nowrap;
 }
 
 .card-title {
     margin: 0;
-    font-family: inherit;
+    font-family: var(--t-font-sans);
     font-size: 16px;
     font-weight: 500;
     line-height: 1;
     letter-spacing: -0.02em;
-    color: rgba(0, 0, 0, 0.65);
+    color: var(--t-body);
 }
 
 .revenue-row {
@@ -68,14 +69,14 @@
 .currency {
     font-size: 27px;
     font-weight: 500;
-    color: rgba(0, 0, 0, 0.55);
+    color: var(--t-muted);
     margin-right: 2px;
 }
 
 .value-num {
     font-size: 34px;
     font-weight: 500;
-    color: rgba(0, 0, 0, 0.8);
+    color: var(--t-strong);
     letter-spacing: -0.03em;
     font-variant-numeric: tabular-nums;
     transition: filter 0.12s ease-out;
@@ -111,7 +112,7 @@
     font-size: 12px;
     font-weight: 400;
     letter-spacing: -0.01em;
-    color: rgba(0, 0, 0, 0.55);
+    color: var(--t-muted);
     line-height: 1;
     white-space: nowrap;
 }
@@ -125,44 +126,51 @@
 }
 
 .seg-toggle {
+    position: relative;
     display: inline-flex;
     align-items: center;
     gap: 4px;
     padding: 3px;
-    background: rgba(0, 0, 0, 0.06);
-    border-radius: 8px;
+    background: color-mix(in srgb, var(--t-strong) 6%, var(--t-bg));
+    border-radius: 100px;
     opacity: 0.8;
 }
 
 .seg-btn {
     position: relative;
+    z-index: 1;
     display: inline-flex;
     align-items: center;
     gap: 6px;
     padding: 6px 14px;
     border: 1px solid transparent;
     background: none;
-    border-radius: 7px;
-    font-family: inherit;
+    border-radius: 100px;
+    font-family: var(--t-font-sans);
     font-size: 13px;
     font-weight: 500;
     letter-spacing: -0.04em;
-    color: rgba(0, 0, 0, 0.55);
+    color: var(--t-muted);
     cursor: pointer;
     transition: color 0.2s ease;
 }
 
 .seg-btn.active {
-    color: rgba(0, 0, 0, 0.8);
+    color: var(--t-strong);
 }
 
 .seg-thumb {
     position: absolute;
-    inset: -1px;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 6px;
-    background: #fff;
+    top: 3px;
+    bottom: 3px;
+    left: 0;
+    z-index: 0;
+    box-sizing: border-box;
+    border: 1px solid var(--t-border);
+    border-radius: 100px;
+    background: var(--t-bg);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    pointer-events: none;
 }
 
 .seg-icon {
@@ -183,7 +191,7 @@
 
 .divider {
     height: 1px;
-    background: rgba(0, 0, 0, 0.04);
+    background: color-mix(in srgb, var(--t-border) 20%, var(--t-bg));
     margin: 20px 0;
 }
 
@@ -198,7 +206,7 @@
     font-size: 14px;
     font-weight: 500;
     letter-spacing: -0.02em;
-    color: rgba(0, 0, 0, 0.55);
+    color: var(--t-muted);
     white-space: nowrap;
 }
 
@@ -212,7 +220,8 @@
     width: 100%;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 4px;
+    padding: 4px 0;
     overflow-x: auto;
     scrollbar-width: none;
 }
@@ -224,26 +233,32 @@
 .pill {
     flex-shrink: 0;
     padding: 6px 12px;
-    border: none;
-    font-family: inherit;
+    border: 1px solid transparent;
+    font-family: var(--t-font-sans);
     border-radius: 100px;
-    background: rgba(0, 0, 0, 0.06);
+    background: color-mix(in srgb, var(--t-strong) 3%, var(--t-bg));
     font-size: 14px;
     letter-spacing: -0.02em;
-    color: rgba(0, 0, 0, 0.6);
+    color: var(--t-subtle);
     white-space: nowrap;
     cursor: pointer;
-    transition: background 0.2s ease, color 0.2s ease;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .pill:hover {
-    background: rgba(0, 0, 0, 0.08);
-    color: rgba(0, 0, 0, 0.8);
+    background: color-mix(in srgb, var(--t-strong) 5%, var(--t-bg));
+    color: var(--t-body);
+}
+
+.pill.pill-all {
+    padding: 6px 22px;
 }
 
 .pill.active {
-    color: rgba(0, 0, 0, 0.85);
-    background: rgba(0, 0, 0, 0.12);
+    color: var(--t-strong);
+    background: var(--t-bg);
+    border-color: var(--t-border);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .scroll-arrow {
@@ -256,10 +271,10 @@
     width: 28px;
     height: 28px;
     padding: 0;
-    border: 1px solid rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--t-border);
     border-radius: 100px;
-    background: #fff;
-    color: rgba(0, 0, 0, 0.55);
+    background: var(--t-bg);
+    color: var(--t-muted);
     cursor: pointer;
     z-index: 2;
     opacity: 0;
@@ -282,9 +297,9 @@
 }
 
 .scroll-arrow:hover {
-    background: #fff;
-    border-color: rgba(0, 0, 0, 0.14);
-    color: rgba(0, 0, 0, 0.9);
+    background: var(--t-bg);
+    border-color: var(--t-muted);
+    color: var(--t-strong);
 }
 
 .scroll-arrow svg {
@@ -306,22 +321,23 @@
 }
 
 .grid-line {
-    stroke: rgba(0, 0, 0, 0.04);
+    stroke: var(--t-border);
     stroke-width: 1;
     stroke-dasharray: 2 2;
 }
 
 .grid-line-v {
-    stroke: rgba(0, 0, 0, 0.03);
+    stroke: var(--t-border);
     stroke-width: 1;
     stroke-dasharray: 2 2;
 }
 
 .axis-label {
+    font-family: var(--t-font-mono);
     font-size: 12px;
     font-weight: 500;
     letter-spacing: -0.04em;
-    fill: rgba(0, 0, 0, 0.55);
+    fill: var(--t-subtle);
 }
 
 .hit-dot {
@@ -330,7 +346,7 @@
 }
 
 .crosshair-line {
-    stroke: #2C836B;
+    stroke: #2563EB;
     stroke-width: 1;
     stroke-dasharray: 2 5;
     stroke-linecap: round;
