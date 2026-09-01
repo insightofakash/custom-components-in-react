@@ -25,6 +25,11 @@ Each component has its own route, listed on the **Components** index page
   links are real rope physics: every parent-child wire is a verlet-simulated
   rope pinned at both ends that dangles, swings on expand/collapse, and bends
   away as the cursor approaches.
+- **User Search** — `/user-search` — a dark searchable user combobox whose
+  option list is born from the input through a liquid-gooey morph: type to
+  filter, a spring-driven highlight chases your cursor down the rows, selecting
+  collapses to an avatar chip with a clear button that turns red ("hover to
+  cancel") before you confirm.
 
 More components coming soon — add them in `src/components/registry.jsx` and they
 automatically get their own route and index entry.
