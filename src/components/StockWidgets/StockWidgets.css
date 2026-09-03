@@ -1,0 +1,518 @@
+.stock-widgets {
+    width: 100%;
+    max-width: 485px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    font-family: var(--t-font-rounded);
+    -webkit-font-smoothing: antialiased;
+    box-sizing: border-box;
+}
+
+.sw-row {
+    width: 100%;
+    display: flex;
+    gap: 32px;
+}
+
+.sw-card {
+    position: relative;
+    background: #080808;
+    border: 1.33px solid #ffffff;
+    box-sizing: border-box;
+    border-radius: 32px;
+    corner-shape: superellipse(5.2);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.sw-card--large {
+    width: 100%;
+    height: auto;
+    min-height: 226.686px;
+    justify-content: flex-start;
+    gap: 0;
+    padding: 21.335px 20px 16px;
+}
+
+.sw-card--large .sw-header {
+    gap: 13.334px;
+}
+
+.sw-card--large .sw-company {
+    gap: 13.334px;
+}
+
+.sw-card--large .sw-company-text {
+    gap: 2.666px;
+}
+
+.sw-card--small {
+    width: 100%;
+    height: 236.887px;
+    flex: 1;
+    justify-content: space-between;
+    gap: 0;
+    padding: 18px 21.335px 18px;
+}
+
+/* Header row */
+
+.sw-header {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.sw-company {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    min-width: 0;
+}
+
+.sw-card--small .sw-company {
+    gap: 5px;
+}
+
+.sw-company-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+    line-height: 1;
+}
+
+.sw-avatar {
+    position: relative;
+    background: #fff;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sw-avatar img {
+    display: block;
+    width: 67.4%;
+    height: 67.4%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.sw-ticker {
+    font-size: 16.001px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: -0.01em;
+    line-height: 19px;
+    white-space: nowrap;
+}
+
+.sw-ticker--muted {
+    font-size: 18.668px;
+    color: #808080;
+    letter-spacing: -0.01em;
+    line-height: 22px;
+}
+
+.sw-name {
+    font-size: 16.001px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.01em;
+    line-height: 19px;
+    white-space: nowrap;
+}
+
+.sw-updated {
+    display: inline-flex;
+    align-items: center;
+    gap: 4.00035px;
+    font-size: 13.334px;
+    white-space: nowrap;
+    line-height: 16px;
+}
+
+.sw-updated-label {
+    font-weight: 600;
+    color: #808080;
+}
+
+.sw-updated-value {
+    font-weight: 700;
+    color: #fff;
+}
+
+.sw-time {
+    display: inline-flex;
+    align-items: center;
+    gap: 2.666px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    opacity: 0.5;
+    line-height: 13px;
+}
+
+.sw-time svg {
+    color: #999999;
+    flex-shrink: 0;
+}
+
+/* Chart zone */
+
+.sw-chart-zone {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    overflow: visible;
+    flex-shrink: 0;
+}
+
+.sw-chart-zone--large {
+    height: 66px;
+    min-height: 66px;
+    margin-top: 4px;
+    width: 355.476px;
+    margin-left: -20px;
+}
+
+.sw-chart-zone--small {
+    height: 50px;
+    min-height: 50px;
+    margin-top: 8px;
+    width: 185.349px;
+    margin-left: -21.335px;
+}
+
+.sw-chart-zone .sw-chart {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.sw-divider {
+    position: absolute;
+    left: 1.33px;
+    right: 0;
+    height: 2px;
+    background: repeating-linear-gradient(to right, currentColor 0 4px, transparent 4px 10px);
+    opacity: 0.2;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.sw-glow {
+    position: absolute;
+    pointer-events: none;
+    border-radius: 50%;
+    /* Figma: Vector 33/34 123.74×139.50, blur 133.7, opacity 0.5/0.6, blend color-dodge/linear-dodge */
+}
+
+/* Dashed divider — Figma Vector 39: stroke 4, dash [8,8], cap round, color per-card, opacity 0.2
+   Overlay inside chart (Figma y121 inside 83h chart) — absolute */
+.sw-dash {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 4px;
+    overflow: visible;
+    opacity: 0.2;
+    pointer-events: none;
+}
+
+.sw-chart-zone--large .sw-dash {
+    bottom: 26px;
+}
+
+.sw-chart-zone--small .sw-dash--green {
+    bottom: 19px;
+}
+
+.sw-chart-zone--small .sw-dash--red {
+    top: -14px;
+    bottom: auto;
+}
+
+.sw-dash--green {
+    color: #00de98;
+}
+
+.sw-dash--red {
+    color: #de0043;
+}
+
+.sw-dash line {
+    stroke-linecap: round;
+    stroke-dasharray: 8 8;
+}
+
+/* Bottom stats — Figma Ohlc/CurrentPrice at y149/140 vs chart bottom 151 */
+.sw-bottom {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.sw-card--large .sw-bottom {
+    margin-top: 0;
+}
+
+.sw-card--small .sw-bottom {
+    margin-top: 16px;
+}
+
+.sw-ohlc {
+    display: flex;
+    flex-direction: column;
+    gap: 5.333px;
+}
+
+.sw-ohlc-row {
+    display: flex;
+    align-items: center;
+    gap: 10.667px;
+}
+
+.sw-ohlc-label {
+    flex-shrink: 0;
+    font-size: 13.334px;
+    font-weight: 600;
+    color: #808080;
+    line-height: 16px;
+}
+
+/* Figma large Ohlc label 66.67, small O/H/L 10/10/8 — Frame 1000007528 at 73.667×58.667 gap5.333 */
+.sw-card--large .sw-ohlc-label {
+    width: 66.672px;
+}
+
+.sw-card--small .sw-ohlc-label {
+    width: 12px;
+    text-align: left;
+}
+
+.sw-current {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0;
+}
+
+.sw-current--lg {
+    align-items: flex-start;
+}
+
+.sw-cp-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #808080;
+    white-space: nowrap;
+}
+
+/* Price — tighter -1% as requested */
+.sw-price {
+    display: inline-flex;
+    align-items: baseline;
+    line-height: 1;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+}
+
+.sw-price-main {
+    color: #fff;
+    font-weight: 700;
+}
+
+.sw-price-cents {
+    color: #808080;
+    font-weight: 700;
+}
+
+.sw-price--lg {
+    font-size: 32.002px;
+    line-height: 38px;
+}
+
+.sw-price--md {
+    font-size: 21.335px;
+    line-height: 25px;
+}
+
+.sw-price--sm {
+    font-size: 13.334px;
+    line-height: 16px;
+}
+
+.sw-price--high .sw-price-main,
+.sw-price--high .sw-price-cents {
+    color: #00de98;
+}
+
+.sw-price--low .sw-price-main,
+.sw-price--low .sw-price-cents {
+    color: #de0043;
+}
+
+/* Change badge — Figma 13.334 Semibold gap8 / pct gap2.666 10.667 arrow */
+.sw-change {
+    display: inline-flex;
+    align-items: center;
+    gap: 8.0007px;
+    font-size: 13.334px;
+    font-weight: 700;
+    line-height: 16px;
+    white-space: nowrap;
+}
+
+.sw-change--up {
+    color: #00de98;
+}
+
+.sw-change--up .sw-change-abs {
+    opacity: 0.7;
+}
+
+.sw-change--down {
+    color: #de0043;
+}
+
+.sw-change--down .sw-change-abs {
+    opacity: 0.9;
+}
+
+.sw-change .sw-change-abs {
+    font-variant-numeric: tabular-nums;
+}
+
+.sw-change-pct {
+    display: inline-flex;
+    align-items: center;
+    gap: 2.666px;
+}
+
+.sw-change-pct svg {
+    flex-shrink: 0;
+}
+
+/* Blur-roll — numbers blur as they tick over, same treatment as the chart tooltip */
+.sw-price {
+    transition: filter 0.25s ease-out;
+}
+
+.sw-price.rolling {
+    filter: blur(2px);
+}
+
+.sw-change {
+    transition: filter 0.25s ease-out;
+}
+
+.sw-change.rolling {
+    filter: blur(2px);
+}
+
+.sw-roll {
+    display: inline-block;
+    transition: filter 0.25s ease-out;
+}
+
+.sw-roll.rolling {
+    filter: blur(2px);
+}
+
+/* Feed controls — subtle grey circles, centred below the widgets */
+.sw-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    padding-top: 2px;
+}
+
+.sw-ctl {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: #e0e0e4;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.sw-ctl svg {
+    display: block;
+}
+
+.sw-ctl:hover {
+    background: #cfcfd4;
+}
+
+.sw-ctl:active {
+    transform: scale(0.94);
+}
+
+@media (max-width: 520px) {
+    .stock-widgets {
+        gap: 20px;
+    }
+
+    .sw-row {
+        gap: 20px;
+    }
+
+    .sw-card {
+        padding: 14px;
+        border-radius: 22px;
+        border-width: 1px;
+    }
+
+    .sw-card--large,
+    .sw-card--small {
+        height: auto;
+        min-height: 227px;
+    }
+
+    .sw-price--lg {
+        font-size: 26px;
+    }
+
+    .sw-price--md {
+        font-size: 18px;
+    }
+
+    .sw-chart-zone--large {
+        height: 64px;
+        min-height: 64px;
+    }
+
+    .sw-chart-zone--small {
+        height: 56px;
+        min-height: 56px;
+    }
+}
+
+@media (max-width: 400px) {
+    .sw-row {
+        flex-direction: column;
+    }
+
+    .sw-updated {
+        display: none;
+    }
+}

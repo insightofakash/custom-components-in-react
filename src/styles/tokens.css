@@ -17,6 +17,8 @@
         Roboto,
         Arial,
         sans-serif;
+    --t-font-rounded: "Nunito", "Segoe UI", -apple-system, BlinkMacSystemFont,
+        sans-serif;
     --t-font-mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
     --t-font-mono-geist: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
 

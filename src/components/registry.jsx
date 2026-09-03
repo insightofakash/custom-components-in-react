@@ -5,6 +5,7 @@ import TokenUsage from "./TokenUsage/TokenUsage.jsx";
 import TreeNav from "./TreeNav/index.js";
 import ClusteringChart from "./ClusteringChart/ClusteringChart.jsx";
 import UserSearch from "./UserSearch/UserSearch.jsx";
+import StockWidgets from "./StockWidgets/StockWidgets.jsx";
 
 export const COMPONENTS = [
     { id: "revenue-card", title: "Revenue Card", path: "/revenue-card", Component: RevenueCard },
@@ -28,5 +29,11 @@ export const COMPONENTS = [
         title: "User Search",
         path: "/user-search",
         Component: UserSearch,
+    },
+    {
+        id: "stock-widgets",
+        title: "Stock Widgets",
+        path: "/stock-widgets",
+        Component: StockWidgets,
     },
 ];
