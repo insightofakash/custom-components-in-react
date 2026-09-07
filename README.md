@@ -30,6 +30,10 @@ Each component has its own route, listed on the **Components** index page
   filter, a spring-driven highlight chases your cursor down the rows, selecting
   collapses to an avatar chip with a clear button that turns red ("hover to
   cancel") before you confirm.
+- **Controls** — `/controls` — a single page holding four light widgets
+  (stepper, slider, switch, checkbox list) with frosted `.glass-btn` controls,
+  blue single-colour accents, per-step "thock" drag sounds, and a Vercel/Linear
+  sans type scale.
 
 More components coming soon — add them in `src/components/registry.jsx` and they
 automatically get their own route and index entry.

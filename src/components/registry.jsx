@@ -6,6 +6,7 @@ import TreeNav from "./TreeNav/index.js";
 import ClusteringChart from "./ClusteringChart/ClusteringChart.jsx";
 import UserSearch from "./UserSearch/UserSearch.jsx";
 import StockWidgets from "./StockWidgets/StockWidgets.jsx";
+import ControlsShowcase from "./ControlsShowcase/ControlsShowcase.jsx";
 
 export const COMPONENTS = [
     { id: "revenue-card", title: "Revenue Card", path: "/revenue-card", Component: RevenueCard },
@@ -35,5 +36,11 @@ export const COMPONENTS = [
         title: "Stock Widgets",
         path: "/stock-widgets",
         Component: StockWidgets,
+    },
+    {
+        id: "controls",
+        title: "Controls",
+        path: "/controls",
+        Component: ControlsShowcase,
     },
 ];

@@ -156,6 +156,98 @@ function playTick(c, t, params) {
     noise.start(t);
 }
 
+function playThock(c, t, params, vol = 1) {
+    const duration = 0.012 * params.decayMult;
+    const buffer = c.createBuffer(
+        1,
+        Math.max(1, Math.floor(c.sampleRate * duration)),
+        c.sampleRate,
+    );
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < data.length; i++) {
+        data[i] =
+            (Math.random() * 2 - 1) *
+            Math.exp(-i / (c.sampleRate * 0.004 * params.decayMult));
+    }
+
+    const noise = c.createBufferSource();
+    noise.buffer = buffer;
+
+    const filter = c.createBiquadFilter();
+    filter.type = "bandpass";
+    filter.frequency.value = 2200;
+    filter.Q.value = 0.9;
+
+    const gain = c.createGain();
+    gain.gain.setValueAtTime(0.0001, t);
+    gain.gain.exponentialRampToValueAtTime(0.24 * params.gainMult * vol, t + 0.002);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + duration);
+
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(master);
+    noise.start(t);
+    noise.stop(t + duration);
+
+    const osc = c.createOscillator();
+    const oscGain = c.createGain();
+    osc.type = "sine";
+    osc.frequency.value = 170 * params.pitchMult;
+    oscGain.gain.setValueAtTime(0.0001, t);
+    oscGain.gain.exponentialRampToValueAtTime(0.05 * params.gainMult * vol, t + 0.002);
+    oscGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.04 * params.decayMult);
+    osc.connect(oscGain);
+    oscGain.connect(master);
+    osc.start(t);
+    osc.stop(t + 0.05 * params.decayMult);
+}
+
+function playTock(c, t, params, vol = 1) {
+    const duration = 0.011 * params.decayMult;
+    const buffer = c.createBuffer(
+        1,
+        Math.max(1, Math.floor(c.sampleRate * duration)),
+        c.sampleRate,
+    );
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < data.length; i++) {
+        data[i] =
+            (Math.random() * 2 - 1) *
+            Math.exp(-i / (c.sampleRate * 0.004 * params.decayMult));
+    }
+
+    const noise = c.createBufferSource();
+    noise.buffer = buffer;
+
+    const filter = c.createBiquadFilter();
+    filter.type = "bandpass";
+    filter.frequency.value = 3000;
+    filter.Q.value = 1;
+
+    const gain = c.createGain();
+    gain.gain.setValueAtTime(0.0001, t);
+    gain.gain.exponentialRampToValueAtTime(0.26 * params.gainMult * vol, t + 0.002);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + duration);
+
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(master);
+    noise.start(t);
+    noise.stop(t + duration);
+
+    const osc = c.createOscillator();
+    const oscGain = c.createGain();
+    osc.type = "sine";
+    osc.frequency.value = 220 * params.pitchMult;
+    oscGain.gain.setValueAtTime(0.0001, t);
+    oscGain.gain.exponentialRampToValueAtTime(0.06 * params.gainMult * vol, t + 0.002);
+    oscGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.045 * params.decayMult);
+    osc.connect(oscGain);
+    oscGain.connect(master);
+    osc.start(t);
+    osc.stop(t + 0.045 * params.decayMult);
+}
+
 function playDrop(c, t, params) {
     const osc = c.createOscillator();
     const gain = c.createGain();
@@ -450,6 +542,8 @@ const sounds = {
         playHoverDeep(c, c.currentTime, vol);
     },
     ratchet: (vol = 1) => play((c, t, p) => playRatchet(c, t, p, vol)),
+    thock: (vol = 1) => play((c, t, p) => playThock(c, t, p, vol)),
+    tock: (vol = 1) => play((c, t, p) => playTock(c, t, p, vol)),
     whoosh: (vol = 1) => play((c, t, p) => playWhoosh(c, t, p, vol)),
     setFeel: (feel) => {
         currentFeel = feel;
