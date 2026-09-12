@@ -37,7 +37,9 @@ Each component has its own route, listed on the **Components** index page
 - **Draggable Chart** — `/drag-chart` — a pan-able line/area chart with an
   always-on marker tooltip that follows the cursor on hover, and a tick ruler
   you drag sideways to scrub the time window: the chart slides 1:1, the date
-  labels update to the visible range, and values pop in digit-by-digit.
+  labels update to the visible range, and values pop in digit-by-digit. A small
+  sliding-pill tab above the chart toggles between the line and a bar view of
+  the same data.
 
 More components coming soon — add them in `src/components/registry.jsx` and they
 automatically get their own route and index entry.

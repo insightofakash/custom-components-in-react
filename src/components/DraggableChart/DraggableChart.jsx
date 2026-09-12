@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
+    AnimatePresence,
     motion,
     useMotionValue,
     useMotionValueEvent,
@@ -7,6 +8,7 @@ import {
     useTransform,
 } from "framer-motion";
 import NumberPopIn from "../NumberPopIn/NumberPopIn.jsx";
+import SlidingTabs from "../SlidingTabs/SlidingTabs.jsx";
 import sounds from "../../lib/sounds.js";
 import { CHART } from "./chartData.js";
 import "./DraggableChart.css";
@@ -82,6 +84,16 @@ function pathsFor(split) {
     return { bluePath, grayPath, areaPath };
 }
 
+// ── Column view ────────────────────────────────────────────────────────
+// Same data, same pan: one bar per data point, centred on the point, colored
+// blue up to the marker (reached) and gray after it — mirroring the line split.
+const COL_BAR_W = 5;
+
+const BARS = values.map((v, i) => {
+    const y = yFor(v);
+    return { i, x: i * PITCH + (PITCH - COL_BAR_W) / 2, y, h: BASE_Y - y };
+});
+
 function DraggableChart() {
     const rulerRef = useRef(null);
     const plotRef = useRef(null);
@@ -100,6 +112,7 @@ function DraggableChart() {
         return e;
     });
     const [dragging, setDragging] = useState(false);
+    const [mode, setMode] = useState("line"); // "line" | "bar"
 
     const pan = useMotionValue(DEFAULT_PAN);
     const markerIndex = useMotionValue(todayIdx);
@@ -277,6 +290,11 @@ function DraggableChart() {
     const leftDate = dates[edgeIdx];
     const rightDate = dates[Math.min(edgeIdx + windowSize, N - 1)];
 
+    const onMode = (i) => {
+        sounds.toggle();
+        setMode(i === 0 ? "line" : "bar");
+    };
+
     return (
         <motion.section
             className="dc-root"
@@ -285,46 +303,92 @@ function DraggableChart() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
+            <div className="dc-tabs">
+                <SlidingTabs tabs={["Line", "Bar"]} onChange={onMode} />
+            </div>
+
             <div className="dc-plot" ref={plotRef} onPointerMove={onPlotMove}>
                 <div className="dc-clip">
-                    <motion.div className="dc-strip" style={{ x: stripX }}>
-                        <svg
-                            width={STRIP_W}
-                            height={PLOT_H}
-                            viewBox={`0 0 ${STRIP_W} ${PLOT_H}`}
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <defs>
-                                <linearGradient
-                                    id="dc-area"
-                                    x1="0"
-                                    y1={BASE_Y}
-                                    x2="0"
-                                    y2={TOP_Y}
-                                    gradientUnits="userSpaceOnUse"
+                    <AnimatePresence initial={false}>
+                        {mode === "line" ? (
+                            <motion.div
+                                key="line"
+                                className="dc-strip"
+                                style={{ x: stripX }}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.18 }}
+                            >
+                                <svg
+                                    width={STRIP_W}
+                                    height={PLOT_H}
+                                    viewBox={`0 0 ${STRIP_W} ${PLOT_H}`}
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
                                 >
-                                    <stop stopColor="#4171FF" stopOpacity="0" />
-                                    <stop offset="1" stopColor="#4171FF" />
-                                </linearGradient>
-                            </defs>
-                            <motion.path d={areaPath} fill="url(#dc-area)" fillOpacity="0.4" />
-                            <motion.path
-                                d={bluePath}
-                                stroke="#4171FF"
-                                strokeWidth={2.4}
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            />
-                            <motion.path
-                                d={grayPath}
-                                stroke="#A6A6A6"
-                                strokeWidth={2.4}
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            />
-                        </svg>
-                    </motion.div>
+                                    <defs>
+                                        <linearGradient
+                                            id="dc-area"
+                                            x1="0"
+                                            y1={BASE_Y}
+                                            x2="0"
+                                            y2={TOP_Y}
+                                            gradientUnits="userSpaceOnUse"
+                                        >
+                                            <stop stopColor="#4171FF" stopOpacity="0" />
+                                            <stop offset="1" stopColor="#4171FF" />
+                                        </linearGradient>
+                                    </defs>
+                                    <motion.path d={areaPath} fill="url(#dc-area)" fillOpacity="0.4" />
+                                    <motion.path
+                                        d={bluePath}
+                                        stroke="#4171FF"
+                                        strokeWidth={2.4}
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
+                                    <motion.path
+                                        d={grayPath}
+                                        stroke="#A6A6A6"
+                                        strokeWidth={2.4}
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
+                                </svg>
+                            </motion.div>
+                        ) : (
+                            <motion.div
+                                key="bar"
+                                className="dc-strip"
+                                style={{ x: stripX }}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.18 }}
+                            >
+                                <svg
+                                    width={STRIP_W}
+                                    height={PLOT_H}
+                                    viewBox={`0 0 ${STRIP_W} ${PLOT_H}`}
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    {BARS.map((b) => (
+                                        <rect
+                                            key={b.i}
+                                            x={b.x.toFixed(2)}
+                                            y={b.y.toFixed(2)}
+                                            width={COL_BAR_W}
+                                            height={b.h.toFixed(2)}
+                                            rx={1.5}
+                                            fill={b.i <= markerIdx ? "#4171FF" : "#C4C4C4"}
+                                        />
+                                    ))}
+                                </svg>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
 
                 <motion.div className="dc-marker" style={{ x: markerScreenX }}>
