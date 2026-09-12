@@ -36,7 +36,11 @@ const __TRANSITION_STYLES = `
   border: 0;
   background: transparent;
   height: 30px;
-  padding: 4px 12px;
+  padding: 4px 16px;
+  font-family: var(--t-font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
   color: var(--tabs-text-muted);
   cursor: pointer;
   border-radius: 48px;

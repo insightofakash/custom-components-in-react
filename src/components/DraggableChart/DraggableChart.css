@@ -176,28 +176,52 @@
     left: 0;
     will-change: transform;
     pointer-events: none;
+    transition: height 0.22s ease;
 }
 
 /* Denser, subtler ruler, anchored to the BOTTOM of the track. Minor every
-   8px, major every 5th minor (40px) offset so they land on minor index 4. */
+   8px, major every 5th minor (40px) offset so they land on minor index 4.
+   Default (no hover) heights are 90% — on ruler hover they grow to full
+   height and pick up a subtle tint of the chart's series blue. */
 .dc-ticks--minor {
-    height: 18px;
-    background:
-        repeating-linear-gradient(
-            90deg,
-            rgba(166, 166, 166, 0.55) 0 1px,
-            transparent 1px 8px
-        );
+    height: 16px;
+    --tick: rgba(166, 166, 166, 0.55);
+    background: repeating-linear-gradient(
+        90deg,
+        var(--tick) 0 1px,
+        transparent 1px 8px
+    );
 }
 
 .dc-ticks--major {
-    height: 30px;
+    height: 27px;
+    --tick: rgba(127, 127, 127, 0.6);
     background: repeating-linear-gradient(
         90deg,
-        rgba(127, 127, 127, 0.6) 0 1.5px,
+        var(--tick) 0 1.5px,
         transparent 1.5px 40px
     );
     background-position: 32px 0;
+}
+
+/* Hover: full height + the existing grey mixed toward --t-series-blue (#4171FF),
+   so the tint is exactly the chart's blue, not a rotated hue. */
+.dc-ruler:hover .dc-ticks--minor {
+    height: 18px;
+    --tick: color-mix(
+        in srgb,
+        rgba(166, 166, 166, 0.55) 76%,
+        var(--t-series-blue) 24%
+    );
+}
+
+.dc-ruler:hover .dc-ticks--major {
+    height: 30px;
+    --tick: color-mix(
+        in srgb,
+        rgba(127, 127, 127, 0.6) 76%,
+        var(--t-series-blue) 24%
+    );
 }
 
 /* Edge fades — blend the sliding ticks into the surface at both ends */

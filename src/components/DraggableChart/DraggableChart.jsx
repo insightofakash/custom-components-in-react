@@ -382,7 +382,7 @@ function DraggableChart() {
                                             width={COL_BAR_W}
                                             height={b.h.toFixed(2)}
                                             rx={1.5}
-                                            fill={b.i <= markerIdx ? "#4171FF" : "#C4C4C4"}
+                                            fill={b.i < markerIdx ? "#4171FF" : "#C4C4C4"}
                                         />
                                     ))}
                                 </svg>
