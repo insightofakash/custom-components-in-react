@@ -1,0 +1,226 @@
+.dc-root {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    user-select: none;
+    -webkit-user-select: none;
+    font-family: var(--t-font-sans);
+}
+
+/* ── Plot (frame × 238, content plot inset pad) ─────────────────────── */
+.dc-plot {
+    position: relative;
+    width: var(--dc-frame);
+    height: 238px;
+    overflow: hidden;
+}
+
+.dc-clip {
+    position: absolute;
+    top: 0;
+    left: var(--dc-pad);
+    width: var(--dc-plot);
+    height: 238px;
+    overflow: hidden;
+    /* Fade the chart line + area at the content edges so they melt out
+       instead of hard-clipping (the tooltip fade is handled by the overlays). */
+    -webkit-mask-image: linear-gradient(
+        90deg,
+        transparent 0px,
+        #000 10%,
+        #000 90%,
+        transparent 100%
+    );
+    mask-image: linear-gradient(
+        90deg,
+        transparent 0px,
+        #000 10%,
+        #000 90%,
+        transparent 100%
+    );
+}
+
+.dc-strip {
+    position: absolute;
+    top: 0;
+    left: 0;
+    will-change: transform;
+}
+
+.dc-strip svg {
+    display: block;
+}
+
+/* Edge fades — the chart (and its tooltip) melt into the surface at both
+   ends instead of hard-clipping at the plot edges */
+.dc-plot-fade {
+    position: absolute;
+    top: 0;
+    width: 15%;
+    height: 238px;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.dc-plot-fade--l {
+    left: 0;
+    background: linear-gradient(90deg, var(--t-surface), transparent);
+}
+
+.dc-plot-fade--r {
+    right: 0;
+    background: linear-gradient(270deg, var(--t-surface), transparent);
+}
+
+/* ── Marker (pill + cursor + dot) ─────────────────────────────────── */
+.dc-marker {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 238px;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.dc-pill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 28px;
+    min-width: 60px;
+    padding: 0 6px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    background: var(--t-strong);
+    color: #fff;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.dc-cursor {
+    position: absolute;
+    left: -1px;
+    width: 2px;
+    background: var(--t-border);
+    border-radius: 1px;
+}
+
+.dc-cursor--blue {
+    background: var(--t-series-blue);
+}
+
+.dc-dot {
+    position: absolute;
+    left: -9px;
+    width: 18px;
+    height: 18px;
+    box-sizing: border-box;
+    border-radius: 50%;
+    background: var(--t-series-blue);
+    border: 3px solid var(--t-series-ring);
+}
+
+.dc-dot::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--t-series-blue);
+    animation: dc-dot-pulse 1.8s ease-out infinite;
+}
+
+@keyframes dc-dot-pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+    75%,
+    100% {
+        transform: scale(2.6);
+        opacity: 0;
+    }
+}
+
+/* ── Ruler (draggable) ────────────────────────────────────────────── */
+.dc-ruler {
+    position: relative;
+    width: var(--dc-frame);
+    height: 42px;
+    overflow: hidden;
+    touch-action: none;
+    cursor: ew-resize;
+}
+
+.dc-ruler.is-dragging {
+    cursor: ew-resize;
+}
+
+/* Chart is hover-only (tooltip); it must not advertise dragging */
+
+.dc-ticks {
+    position: absolute;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    will-change: transform;
+    pointer-events: none;
+}
+
+/* Denser, subtler ruler, anchored to the BOTTOM of the track. Minor every
+   8px, major every 5th minor (40px) offset so they land on minor index 4. */
+.dc-ticks--minor {
+    height: 18px;
+    background:
+        repeating-linear-gradient(
+            90deg,
+            rgba(166, 166, 166, 0.55) 0 1px,
+            transparent 1px 8px
+        );
+}
+
+.dc-ticks--major {
+    height: 30px;
+    background: repeating-linear-gradient(
+        90deg,
+        rgba(127, 127, 127, 0.6) 0 1.5px,
+        transparent 1.5px 40px
+    );
+    background-position: 32px 0;
+}
+
+/* Edge fades — blend the sliding ticks into the surface at both ends */
+.dc-fade {
+    position: absolute;
+    top: 0;
+    width: 15%;
+    height: 42px;
+    pointer-events: none;
+}
+
+.dc-fade--l {
+    left: 0;
+    background: linear-gradient(90deg, var(--t-surface), transparent);
+}
+
+.dc-fade--r {
+    right: 0;
+    background: linear-gradient(270deg, var(--t-surface), transparent);
+}
+
+/* ── Date labels ──────────────────────────────────────────────────── */
+.dc-dates {
+    display: flex;
+    justify-content: space-between;
+    width: var(--dc-frame);
+    margin-top: -8px; /* 16px below the ruler (root gap is 24) */
+}
+
+.dc-dates .type-body {
+    color: var(--t-muted);
+    margin: 0;
+}

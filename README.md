@@ -34,6 +34,10 @@ Each component has its own route, listed on the **Components** index page
   (stepper, slider, switch, checkbox list) with frosted `.glass-btn` controls,
   blue single-colour accents, per-step "thock" drag sounds, and a Vercel/Linear
   sans type scale.
+- **Draggable Chart** — `/drag-chart` — a pan-able line/area chart with an
+  always-on marker tooltip that follows the cursor on hover, and a tick ruler
+  you drag sideways to scrub the time window: the chart slides 1:1, the date
+  labels update to the visible range, and values pop in digit-by-digit.
 
 More components coming soon — add them in `src/components/registry.jsx` and they
 automatically get their own route and index entry.

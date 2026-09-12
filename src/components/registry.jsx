@@ -5,6 +5,7 @@ import TokenUsage from "./TokenUsage/TokenUsage.jsx";
 import TreeNav from "./TreeNav/index.js";
 import ClusteringChart from "./ClusteringChart/ClusteringChart.jsx";
 import UserSearch from "./UserSearch/UserSearch.jsx";
+import DraggableChart from "./DraggableChart/DraggableChart.jsx";
 import StockWidgets from "./StockWidgets/StockWidgets.jsx";
 import ControlsShowcase from "./ControlsShowcase/ControlsShowcase.jsx";
 
@@ -36,6 +37,12 @@ export const COMPONENTS = [
         title: "Stock Widgets",
         path: "/stock-widgets",
         Component: StockWidgets,
+    },
+    {
+        id: "drag-chart",
+        title: "Draggable Chart",
+        path: "/drag-chart",
+        Component: DraggableChart,
     },
     {
         id: "controls",

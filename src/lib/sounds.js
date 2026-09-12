@@ -131,7 +131,7 @@ function playToggle(c, t, params) {
     osc.stop(t + 0.04 * params.decayMult);
 }
 
-function playTick(c, t, params) {
+function playTick(c, t, params, vol = 1) {
     const duration = 0.004 * params.decayMult;
     const buffer = c.createBuffer(1, c.sampleRate * duration, c.sampleRate);
     const data = buffer.getChannelData(0);
@@ -148,7 +148,7 @@ function playTick(c, t, params) {
     filter.frequency.value = 3000 * params.pitchMult;
 
     const gain = c.createGain();
-    gain.gain.value = 0.3 * params.gainMult;
+    gain.gain.value = 0.3 * params.gainMult * vol;
 
     noise.connect(filter);
     filter.connect(gain);
@@ -520,7 +520,7 @@ const sounds = {
     click: () => play(playClick),
     pop: () => play(playPop),
     toggle: () => play(playToggle),
-    tick: () => play(playTick),
+    tick: (vol = 1) => play((c, t, p) => playTick(c, t, p, vol)),
     drop: () => play(playDrop),
     success: (vol = 1) => play((c, t, p) => playSuccess(c, t, p, vol)),
     error: () => play(playError),
